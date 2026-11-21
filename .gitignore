@@ -19,3 +19,8 @@ build/
 .idea/
 .vscode/
 *.log
+
+.venv/
+soony-data/
+documents.jsonl
+.env

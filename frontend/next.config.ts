@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  devIndicators: false, // keeps the "N" bubble out of demo recordings
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

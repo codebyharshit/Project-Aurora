@@ -1,0 +1,162 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#18212d; --mut:#5d6672; --gold:#b8862e; --goldbg:#f7ecd8; --bg:#f0f0f0; --line:#2b3440; --ai:#6d4fd8; --code:#5d6672; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { width:1440px; height:810px; background:var(--bg); font-family:"IBM Plex Sans",system-ui,sans-serif; color:var(--ink); overflow:hidden; }
+  .abs { position:absolute; }
+  .title { left:60px; top:34px; font-size:40px; font-weight:400; letter-spacing:-0.5px; }
+  .title b { color:var(--gold); font-weight:500; }
+  .logo { right:60px; top:30px; text-align:center; }
+  .logo span { display:block; font-size:22px; font-weight:500; letter-spacing:0.3px; margin-top:2px; }
+  .goal { left:60px; top:104px; width:1320px; height:44px; border-radius:10px; background:var(--ink); color:#fff; display:flex; align-items:center; padding:0 18px; gap:14px; font-size:14.5px; }
+  .goal .tag { background:var(--gold); color:#fff; font-weight:700; font-size:11px; letter-spacing:1.2px; padding:4px 8px; border-radius:5px; }
+  .goal .sub { margin-left:auto; color:#b9c0c9; font-size:12.5px; }
+  .col { top:162px; font-size:11px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--mut); }
+  .col i { font-style:normal; color:var(--gold); margin-right:6px; }
+  .box { position:absolute; border-radius:10px; padding:9px 12px; background:#fff; box-shadow:0 1px 2px rgba(20,25,35,.06), 0 0 0 1px #e2e2e2; }
+  .box .t { font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:6px; line-height:1.2; }
+  .box .d { font-size:11.2px; color:var(--mut); line-height:1.35; margin-top:4px; }
+  .k { margin-left:auto; font-size:9.5px; font-weight:600; letter-spacing:.4px; padding:2px 6px; border-radius:4px; white-space:nowrap; }
+  .k.ai { background:#efeafd; color:var(--ai); }
+  .k.code { background:#eceef1; color:var(--code); }
+  .k.mix { background:linear-gradient(90deg,#efeafd 50%,#eceef1 50%); color:#4b4f7a; }
+  .src { background:#e6e7e9; box-shadow:none; }
+  .src .t { font-size:12.5px; }
+  .human { background:var(--goldbg); box-shadow:0 0 0 1.5px var(--gold); }
+  .human .t { color:#7a5512; }
+  .ext { background:transparent; box-shadow:none; border:1.5px dashed #9aa1aa; }
+  .small { font-size:10.5px; color:var(--mut); }
+  .lbl { position:absolute; font-size:10.5px; color:var(--mut); background:var(--bg); padding:0 4px; white-space:nowrap; }
+  .chip { position:absolute; border-radius:8px; background:#fff; box-shadow:0 1px 2px rgba(20,25,35,.06),0 0 0 1px #e2e2e2; padding:7px 9px; }
+  .chip .t { font-size:12px; font-weight:600; line-height:1.2; }
+  .chip .d { font-size:10.4px; color:var(--mut); margin-top:3px; line-height:1.3; }
+  .store { left:60px; top:676px; width:1320px; height:40px; border-radius:10px; background:#fff; box-shadow:0 0 0 1px #d9d9d9; display:flex; align-items:center; gap:12px; padding:0 16px; font-size:13px; }
+  .store b { font-weight:600; }
+  .store .m { color:var(--mut); }
+  .legend { left:60px; top:732px; display:flex; gap:22px; align-items:center; font-size:11.5px; color:var(--mut); }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .sw { width:14px; height:14px; border-radius:4px; display:inline-block; }
+  .foot { left:60px; top:774px; font-size:16px; }
+</style></head>
+<body>
+  <div class="abs title"><b>2 |</b> Solution – How the agents connect</div>
+  <div class="abs logo">
+    <svg width="64" height="34" viewBox="0 0 64 34"><path d="M14 26 A18 18 0 0 1 50 26" fill="none" stroke="#b8862e" stroke-width="2.6" stroke-linecap="round"/><line x1="4" y1="31" x2="30" y2="31" stroke="#18212d" stroke-width="2.4" stroke-linecap="round"/><line x1="34" y1="31" x2="60" y2="31" stroke="#18212d" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <span>aurora</span>
+  </div>
+
+  <div class="abs goal">
+    <span class="tag">GOAL</span>
+    <span><b>Ship Grand Heist 6 by Sun 20:00</b> &nbsp;·&nbsp; Collector’s 0% short &nbsp;·&nbsp; Standard ≤ 2% &nbsp;·&nbsp; gaps ranked by € at risk per hour</span>
+    <span class="sub">set by the Onboarding Agent · confirmed by a human</span>
+  </div>
+
+  <div class="abs col" style="left:60px"><i>01</i>Sources</div>
+  <div class="abs col" style="left:270px"><i>02</i>Understand</div>
+  <div class="abs col" style="left:510px"><i>03</i>Find the gaps</div>
+  <div class="abs col" style="left:800px"><i>04</i>Decide</div>
+  <div class="abs col" style="left:1130px"><i>05</i>Act</div>
+
+  <!-- 01 Sources -->
+  <div class="box src" style="left:60px;top:190px;width:165px;height:72px"><div class="t">SAP / ERP</div><div class="d">purchase orders, stock, receipts, shipments</div></div>
+  <div class="box src" style="left:60px;top:276px;width:165px;height:72px"><div class="t">Paper &amp; PDFs</div><div class="d">delivery notes, handwriting, KR · CN · PL · EN</div></div>
+  <div class="box src" style="left:60px;top:362px;width:165px;height:72px"><div class="t">Spreadsheets</div><div class="d">shipment tracker, often out of date</div></div>
+  <div class="box src" style="left:60px;top:448px;width:165px;height:72px"><div class="t">Supplier mailbox</div><div class="d">notices, offers, replies, news</div></div>
+  <div class="box src" style="left:60px;top:548px;width:165px;height:72px"><div class="t">Policy &amp; org chart</div><div class="d">approval limits, roles, vacancies</div></div>
+
+  <!-- 02 Understand -->
+  <div class="box" style="left:270px;top:190px;width:200px;height:96px"><div class="t">Data Intake<span class="k mix">AI + code</span></div><div class="d">Watches every source every 60 s; Schema Mapper learns files nobody configured</div></div>
+  <div class="box" style="left:270px;top:314px;width:200px;height:96px"><div class="t">Document Reader<span class="k ai">AI</span></div><div class="d">Scans, handwriting, any language → facts with source and confidence</div></div>
+  <div class="box" style="left:270px;top:540px;width:200px;height:88px"><div class="t">Onboarding<span class="k ai">AI</span></div><div class="d">Parses policy into rules; proposes goal and autonomy for a human to confirm</div></div>
+
+  <!-- 03 Find -->
+  <div class="box" style="left:510px;top:190px;width:250px;height:88px"><div class="t">Launch Planner<span class="k code">code</span></div><div class="d">ERP view vs reality, planned backwards from Sunday 20:00; each fix’s last useful moment</div></div>
+  <div class="chip" style="left:510px;top:296px;width:121px;height:66px"><div class="t">Order Confirm.</div><div class="d">PO vs supplier’s confirmation</div></div>
+  <div class="chip" style="left:639px;top:296px;width:121px;height:66px"><div class="t">Stock Truth</div><div class="d">paper vs ERP stock</div></div>
+  <div class="chip" style="left:510px;top:370px;width:121px;height:66px"><div class="t">Release Gate</div><div class="d">rejected lots, banned revisions</div></div>
+  <div class="chip" style="left:639px;top:370px;width:121px;height:66px"><div class="t">Tracking</div><div class="d">port, short, silent carriers</div></div>
+  <div class="box" style="left:510px;top:460px;width:250px;height:88px"><div class="t">Risk Triage<span class="k ai">AI</span></div><div class="d">Catches what no rule knows: export licence, plant shutdown, Incoterms hold</div></div>
+
+  <!-- 04 Decide -->
+  <div class="box" style="left:800px;top:190px;width:290px;height:62px"><div class="t">Case Manager<span class="k code">code</span></div><div class="d">One case per problem, ranked by € at risk per hour</div></div>
+  <div class="box" style="left:840px;top:286px;width:250px;height:58px"><div class="t">Sourcing<span class="k code">code</span></div><div class="d">Prices options, ranks by copies saved per €</div></div>
+  <div class="box" style="left:840px;top:358px;width:250px;height:58px"><div class="t">Approvals<span class="k mix">AI + code</span></div><div class="d">Who signs, per policy; covers vacancies</div></div>
+  <div class="box" style="left:840px;top:430px;width:250px;height:58px"><div class="t">Decision Copilot<span class="k mix">AI + code</span></div><div class="d">One-line why: € protected vs cost</div></div>
+  <div class="box" style="left:840px;top:526px;width:250px;height:100px"><div class="t">Investigator<span class="k ai">AI agent</span></div><div class="d">Tool-using agent for new problems: plan, parts, suppliers, what-ifs → options. The decision is saved as a new playbook ↺</div></div>
+
+  <!-- 05 Act -->
+  <div class="box human" style="left:1130px;top:190px;width:250px;height:78px"><div class="t">Person your policy names</div><div class="d" style="color:#7a5512">One notice, one click: sign off. Sets the mandate (budget, quantity, time)</div></div>
+  <div class="box" style="left:1130px;top:298px;width:250px;height:64px"><div class="t">Supplier Chaser<span class="k ai">AI</span></div><div class="d">Emails in the supplier’s language, reminds once</div></div>
+  <div class="box" style="left:1130px;top:388px;width:250px;height:64px"><div class="t">Negotiation<span class="k mix">AI + rules</span></div><div class="d">Accept · counter · answer · escalate within mandate</div></div>
+  <div class="box ext" style="left:1130px;top:484px;width:250px;height:44px;display:flex;align-items:center;justify-content:center"><div class="t" style="font-weight:500;color:#5d6672">Supplier &nbsp;<span class="small">writes back in KR · CN · PL · EN</span></div></div>
+  <div class="box" style="left:1130px;top:558px;width:250px;height:68px"><div class="t">Tracking<span class="k mix">AI + code</span></div><div class="d">Waybill → in transit → delivered; the plan updates</div></div>
+
+  <!-- connectors -->
+  <svg class="abs" style="left:0;top:0" width="1440" height="810" viewBox="0 0 1440 810">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b3440"/></marker>
+      <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#b8862e"/></marker>
+    </defs>
+    <g fill="none" stroke="#2b3440" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <!-- sources bus → Data Intake -->
+      <path d="M225 226 H247 M225 312 H247 M225 398 H247 M225 484 H247 M247 226 V484"/>
+      <path d="M247 238 H268" marker-end="url(#a)"/>
+      <!-- policy → onboarding -->
+      <path d="M225 584 H268" marker-end="url(#a)"/>
+      <!-- intake → reader -->
+      <path d="M370 286 V312" marker-end="url(#a)"/>
+      <!-- understand → find bus -->
+      <path d="M470 238 H490 M470 362 H490 M490 234 V504"/>
+      <path d="M490 234 H508" marker-end="url(#a)"/>
+      <path d="M490 366 H508" marker-end="url(#a)"/>
+      <path d="M490 504 H508" marker-end="url(#a)"/>
+      <!-- find → case manager bus -->
+      <path d="M760 234 H780 M760 329 H780 M760 403 H780 M760 504 H780 M780 221 V504"/>
+      <path d="M780 221 H798" marker-end="url(#a)"/>
+      <!-- case manager → known chain / investigator -->
+      <path d="M820 252 V576"/>
+      <path d="M820 315 H838" marker-end="url(#a)"/>
+      <path d="M820 576 H838" marker-end="url(#a)"/>
+      <path d="M965 344 V356" marker-end="url(#a)"/>
+      <path d="M965 416 V428" marker-end="url(#a)"/>
+      <!-- decide → person -->
+      <path d="M1090 459 H1110 M1090 576 H1110 M1110 229 V576"/>
+      <path d="M1110 229 H1128" marker-end="url(#a)"/>
+      <!-- act chain -->
+      <path d="M1255 268 V296" stroke="#b8862e" stroke-width="2" marker-end="url(#g)"/>
+      <path d="M1255 362 V386" marker-end="url(#a)"/>
+      <path d="M1235 452 V482" marker-end="url(#a)"/>
+      <path d="M1275 484 V454" marker-end="url(#a)"/>
+      <path d="M1255 528 V556" marker-end="url(#a)"/>
+      <!-- escalate back to the person -->
+      <path d="M1380 420 H1404 V236 H1382" stroke-dasharray="5 4" marker-end="url(#a)"/>
+      <!-- feedback loop: replies, waybills, new drops re-run the loop -->
+      <path d="M1255 626 V656 H490 V508" stroke="#b8862e" stroke-width="1.8" stroke-dasharray="6 5" marker-end="url(#g)"/>
+    </g>
+  </svg>
+
+  <!-- connector labels -->
+  <div class="lbl" style="left:476px;top:420px;transform:rotate(-90deg);transform-origin:left top;background:var(--bg)">facts + evidence</div>
+  <div class="lbl" style="left:766px;top:440px;transform:rotate(-90deg);transform-origin:left top">cases</div>
+  <div class="lbl" style="left:826px;top:262px;padding:0 2px">known type → playbook</div>
+  <div class="lbl" style="left:826px;top:500px;padding:0 2px">new type</div>
+  <div class="lbl" style="left:1262px;top:274px;color:#7a5512">sign-off = mandate</div>
+  <div class="lbl" style="left:1285px;top:461px">replies</div>
+  <div class="lbl" style="left:1160px;top:461px">emails</div>
+  <div class="lbl" style="left:1262px;top:536px">waybill</div>
+  <div class="lbl" style="left:1408px;top:372px;transform:rotate(-90deg);transform-origin:left top">escalate</div>
+  <div class="lbl" style="left:640px;top:648px;color:#7a5512;font-weight:500">every reply, waybill and new data drop re-runs the loop · human decisions survive</div>
+
+  <div class="abs store"><b>Shared case store</b><span class="m">status · evidence · options · mandate · negotiation · tracking · timeline — every agent reads and writes here, so each AI call gets only what it needs. Money and approvals are deterministic code.</span></div>
+
+  <div class="abs legend">
+    <span><i class="sw" style="background:#efeafd;box-shadow:0 0 0 1px #d8cff8"></i>AI</span>
+    <span><i class="sw" style="background:#eceef1;box-shadow:0 0 0 1px #d6d9de"></i>Code (deterministic)</span>
+    <span><i class="sw" style="background:#f7ecd8;box-shadow:0 0 0 1.5px #b8862e"></i>Human decides</span>
+    <span><i class="sw" style="background:#e6e7e9"></i>Customer’s data</span>
+    <span><svg width="26" height="8"><path d="M1 4 H25" stroke="#b8862e" stroke-width="1.8" stroke-dasharray="5 4"/></svg>Feedback loop</span>
+  </div>
+  <div class="abs foot">START Hack Munich · 22 Nov 2026</div>
+</body></html>

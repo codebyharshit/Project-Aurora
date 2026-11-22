@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { AuroraWordmark, Mark } from "./Brand";
 
 /** Aurora's own pages (landing, how it works, business, team): static, no API, Aurora brand rather than Soony's. */
 
@@ -14,18 +15,7 @@ function join(...c: (string | false | undefined)[]) {
 }
 
 export function AuroraLogo({ size = 28 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden>
-      <defs>
-        <linearGradient id="aur-site" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stopColor="#18181b" />
-          <stop offset="1" stopColor="#52525b" />
-        </linearGradient>
-      </defs>
-      <rect width="24" height="24" rx="7" fill="url(#aur-site)" />
-      <path d="M5.5 16.5c2-5 4.2-8 6.5-8s4.5 3 6.5 8" stroke="#f59e0b" strokeWidth="2" fill="none" strokeLinecap="round" />
-    </svg>
-  );
+  return <Mark style={{ height: size * 0.6 }} />;
 }
 
 export function SiteShell({ active, children }: { active?: string; children: ReactNode }) {
@@ -33,9 +23,8 @@ export function SiteShell({ active, children }: { active?: string; children: Rea
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-30 border-b border-zinc-200/80 bg-white/85 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-4 px-5">
-          <Link href="/about" className="flex items-center gap-2">
-            <AuroraLogo size={24} />
-            <span className="text-[15px] font-semibold tracking-tight text-zinc-900">Aurora</span>
+          <Link href="/about" className="flex items-center" aria-label="Aurora home">
+            <AuroraWordmark size={16} />
           </Link>
           <nav className="hidden items-center gap-1 sm:flex" aria-label="Aurora">
             {NAV.map((n) => (

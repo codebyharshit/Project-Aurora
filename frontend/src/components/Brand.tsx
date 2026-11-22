@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { cx } from "./ui";
+
+// Local copy: ui.tsx is a client module, and this file renders on the server.
+const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
 
 /** Two slanted red bars and SOONY in heavy italic, Soony blue. */
 export function SoonyWordmark({ className, size = 17 }: { className?: string; size?: number }) {
@@ -20,29 +22,47 @@ export function SoonyWordmark({ className, size = 17 }: { className?: string; si
   );
 }
 
-/** The existing Aurora mark, small, with a quiet "powered by". */
+/** The Aurora mark, small, with a quiet "powered by". */
 export function AuroraMark({ className }: { className?: string }) {
   return (
     <Link href="/about" className={cx("inline-flex items-center gap-1.5 whitespace-nowrap", className)} title="About Aurora">
-      <Mark className="h-4 w-4" />
+      <Mark style={{ height: 11 }} strokeWidth={2.4} />
       <span className="text-[11px] text-zinc-500">
-        powered by <span className="font-medium text-zinc-600">Aurora</span>
+        powered by <span className="font-medium text-zinc-600">aurora</span>
       </span>
     </Link>
   );
 }
 
-export function Mark({ className }: { className?: string }) {
+export const AURORA_GOLD = "#C98A1C";
+export const AURORA_NAVY = "#0F1B2A";
+
+/** The Aurora logo: a gold sun rising over a split horizon line. */
+export function Mark({
+  className,
+  style,
+  strokeWidth = 2.6,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+  strokeWidth?: number;
+}) {
   return (
-    <svg viewBox="0 0 24 24" className={cx("h-6 w-6", className)} aria-hidden>
-      <defs>
-        <linearGradient id="aur" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stopColor="#18181b" />
-          <stop offset="1" stopColor="#52525b" />
-        </linearGradient>
-      </defs>
-      <rect width="24" height="24" rx="7" fill="url(#aur)" />
-      <path d="M5.5 16.5c2-5 4.2-8 6.5-8s4.5 3 6.5 8" stroke="#f59e0b" strokeWidth="2" fill="none" strokeLinecap="round" />
+    <svg viewBox="0 0 48 26" className={cx("w-auto", className)} style={{ height: 24, ...style }} aria-hidden fill="none" strokeLinecap="round">
+      <path d="M7 19.5A17 17 0 0 1 41 19.5" stroke={AURORA_GOLD} strokeWidth={strokeWidth} />
+      <path d="M2 23.5H22.4M25.6 23.5H46" stroke={AURORA_NAVY} strokeWidth={strokeWidth} />
     </svg>
+  );
+}
+
+/** Mark + lowercase "aurora", as in the logo. */
+export function AuroraWordmark({ className, size = 15 }: { className?: string; size?: number }) {
+  return (
+    <span className={cx("inline-flex items-center gap-2", className)} aria-label="Aurora">
+      <Mark style={{ height: size * 1.1 }} />
+      <span className="font-medium leading-none tracking-[-0.01em]" style={{ fontSize: size * 1.15, color: AURORA_NAVY }}>
+        aurora
+      </span>
+    </span>
   );
 }

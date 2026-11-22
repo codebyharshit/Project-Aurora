@@ -4,7 +4,7 @@
 
 > Your ERP says you're fine. Your paperwork says you're not. Aurora closes the gap before the trucks leave.
 
-**Submission:** [Pitch deck](Aurora.pdf) · Demo video: _link_ · Live prototype: _link_ · [Agent flow](docs/assets/agent-flow-diagram.png) · [Eval 21/21](docs/EVAL.md)
+**Submission:** [Pitch deck](Aurora.pdf) · Demo video: _link_ · [Live prototype](https://frontend-nu-ten-91ia2nm61q.vercel.app) · [Agent flow](docs/assets/agent-flow-diagram.png) · [Eval 21/21](docs/EVAL.md)
 
 **Your ERP says you're fine. Your paperwork says you're not.** Aurora is a team of specialised AI agents that finds the gap, prices it against your next deadline, and closes it within your own rules and with your approval: it reads every document (scans, handwriting, Korean/Polish/Chinese PDFs), plans backwards from the deadline, routes each decision to the one person your policy names, emails and **negotiates** with suppliers, and tracks the goods until they arrive.
 

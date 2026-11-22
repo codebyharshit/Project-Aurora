@@ -13,7 +13,7 @@
 → Launch room, Everyone: verdict "Not yet", Collector's 91.8% → 100%, Standard 95.0% → 98.9%, "3 approvals, €18,840".
 
 ## 0:30 — Process and agents (40 s)
-"Soony's process has seven steps; only two had a system. Now every step has a specialised agent — Lio's model: one agent per business task."
+"Soony's process has seven steps; only two had a system. Now every step has a specialised agent: one agent per business task."
 → Process strip → AI team page. Point at: **Document Reader** (299 documents, 5 languages, handwriting), **Stock Truth** (the art book booked as 80,000, delivery note says 8,000 — show the scan), **Order Confirmation** (a supplier confirmed a banned revision; an order nobody confirmed from a supplier with a shutdown), **Tracking** (container at the port, the spreadsheet still says in transit).
 "Nothing is hardcoded: 21 of 21 checks re-found from raw files."
 

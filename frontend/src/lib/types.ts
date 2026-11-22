@@ -546,7 +546,6 @@ export interface ProcessStep {
 export interface AgentInfo {
   id: string;
   name: string;
-  lio_equivalent?: string;
   steps?: number[];
   /** Older shape. */
   process_steps?: number[];

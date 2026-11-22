@@ -39,7 +39,7 @@ export function ProcessStrip({
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="flex items-baseline gap-1.5">
-                    <span className="text-[13px] text-zinc-400" aria-hidden>
+                    <span className="text-[13px] text-zinc-500" aria-hidden>
                       {CIRCLED[s.step - 1] || s.step}
                     </span>
                     <span className="text-[14px] font-semibold text-zinc-900 group-hover:text-soony-blue">{s.name}</span>
@@ -52,14 +52,14 @@ export function ProcessStrip({
                     </Tip>
                   )}
                 </div>
-                <p className="mt-1 truncate text-[12px] text-zinc-500" title={s.system_today}>
+                <p className="mt-1 truncate text-[12px] text-zinc-600" title={s.system_today}>
                   {s.system_today}
                 </p>
                 <p className="mt-2 flex items-center gap-1.5">
                   <span
                     className={cx(
                       "inline-flex items-center gap-1 rounded px-1 py-px text-[10px] font-medium uppercase tracking-wide",
-                      had ? "text-zinc-500 ring-1 ring-inset ring-zinc-200" : "bg-soony-blue/8 text-soony-blue",
+                      had ? "text-zinc-600 ring-1 ring-inset ring-zinc-200" : "bg-soony-blue/8 text-soony-blue",
                     )}
                   >
                     {had ? "had a system" : "now an agent"}

@@ -11,7 +11,7 @@ GOAL      Ship Grand Heist 6 by Sun 20:00 · Collector's 0% shortfall · Standar
             (proposed by the Onboarding agent from Soony's memo + notes, confirmed by a human, stored as config)
 PROCESS   ① Order ─ ② Confirm ─ ③ Ship ─ ④ Track ─ ⑤ Receive ─ ⑥ Pack ─ ⑦ Sell
           SAP       email/PDF    4 carriers  spreadsheet  paper scans  pack-out log  deadline   (only ① and ⑥ had a system)
-AGENTS    one specialised agent per business task on every step (Lio's model: matching · chasing · exception handling)
+AGENTS    one specialised agent per business task on every step (matching · chasing · exception handling)
 PEOPLE    each decision goes to the one person the customer's policy names; everyone sees only their own work
 ```
 

@@ -12,15 +12,15 @@ export function WhoMustAct({ work, onPick }: { work: PersonWork[]; onPick: (name
         <p className="flex items-center gap-2 text-[15px] font-semibold text-zinc-900">
           Who must act
           {work.length > 0 && (
-            <span className="tnum text-[13px] font-normal text-zinc-400">
+            <span className="tnum text-[13px] font-normal text-zinc-500">
               {work.length} {work.length === 1 ? "person" : "people"}
             </span>
           )}
         </p>
-        <span className="text-xs text-zinc-400">Click a name to see their view</span>
+        <span className="text-xs text-zinc-500">Click a name to see their view</span>
       </div>
       {work.length === 0 ? (
-        <p className="flex items-center gap-2.5 border-t border-zinc-100 px-5 py-5 text-[14px] text-zinc-500">
+        <p className="flex items-center gap-2.5 border-t border-zinc-100 px-5 py-5 text-[14px] text-zinc-600">
           <Pulse tone="green" />
           Nothing needs a person right now. The agents keep reading.
         </p>
@@ -39,7 +39,7 @@ export function WhoMustAct({ work, onPick }: { work: PersonWork[]; onPick: (name
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                       <span className="text-[14px] font-medium text-zinc-900">{w.person.name}</span>
-                      <span className="truncate text-[12px] text-zinc-500">{w.scope}</span>
+                      <span className="truncate text-[12px] text-zinc-600">{w.scope}</span>
                       {w.standIn && (
                         <Chip tone="amber" title="Approves as stand-in for a vacant role" className="!py-0 text-[11px]">
                           stand-in

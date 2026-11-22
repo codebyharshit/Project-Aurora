@@ -77,8 +77,8 @@ export function SiteShell({ active, children }: { active?: string; children: Rea
           <div className="flex items-center gap-2">
             <AuroraLogo size={18} />
             <span>
-              Aurora · built by <Link href="/lumi" className="text-zinc-700 hover:underline">Team LUMI</Link> for the Lio
-              challenge, START Hack Munich 2026
+              Aurora · built by <Link href="/lumi" className="text-zinc-700 hover:underline">Team LUMI</Link> at START Hack
+              Munich 2026
             </span>
           </div>
           <span>Soony, Popstar Studios and Grand Heist 6 are fictional.</span>

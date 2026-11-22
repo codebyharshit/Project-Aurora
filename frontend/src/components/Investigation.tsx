@@ -27,11 +27,11 @@ export function InvestigationBrief({ inv }: { inv: Inv }) {
   const evidence = (inv.evidence || []).map(splitEvidence);
   return (
     <div className="mx-6 mt-6">
-      <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
-        <Icon name="search" className="h-3.5 w-3.5 text-zinc-400" />
+      <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-zinc-600">
+        <Icon name="search" className="h-3.5 w-3.5 text-zinc-500" />
         The Investigator looked into this
         {inv.confidence != null && (
-          <span className="font-normal normal-case tracking-normal text-zinc-400">
+          <span className="font-normal normal-case tracking-normal text-zinc-500">
             · {Math.round(inv.confidence * 100)}% confident
           </span>
         )}
@@ -50,7 +50,7 @@ export function InvestigationBrief({ inv }: { inv: Inv }) {
 
       {inv.root_cause && (
         <div className="mt-5">
-          <p className="text-xs text-zinc-400">Root cause</p>
+          <p className="text-xs text-zinc-500">Root cause</p>
           <p className="mt-1 text-[14px] leading-relaxed text-zinc-700">{inv.root_cause}</p>
         </div>
       )}
@@ -64,24 +64,24 @@ export function InvestigationBrief({ inv }: { inv: Inv }) {
 
       {(inv.options?.length ?? 0) > 0 && (
         <div className="mt-5">
-          <p className="text-xs text-zinc-400">Options it found</p>
+          <p className="text-xs text-zinc-500">Options it found</p>
           <ul className="mt-2 grid gap-2.5 sm:grid-cols-2">
             {inv.options!.map((o, i) => (
               <li key={i} className="rounded-lg p-3.5 ring-1 ring-inset ring-zinc-200">
                 <p className="text-[14px] font-medium leading-snug text-zinc-900">{o.title}</p>
                 <p className="mt-1.5 text-[13px] leading-snug text-zinc-600">{o.effect}</p>
-                <dl className="mt-2.5 space-y-1 text-xs text-zinc-500">
+                <dl className="mt-2.5 space-y-1 text-xs text-zinc-600">
                   <div className="flex gap-1.5">
-                    <Icon name="person" className="h-3.5 w-3.5 text-zinc-400" />
+                    <Icon name="person" className="h-3.5 w-3.5 text-zinc-500" />
                     {o.who_approves || "No approval needed"}
                   </div>
                   <div className="tnum flex gap-1.5">
-                    <Icon name="chart" className="h-3.5 w-3.5 text-zinc-400" />
+                    <Icon name="chart" className="h-3.5 w-3.5 text-zinc-500" />
                     {o.cost_estimate_eur ? `about ${eur(o.cost_estimate_eur)}` : o.cost_estimate_eur === 0 ? "No cost" : "Cost unknown"}
                   </div>
                   {o.timing && (
                     <div className="flex gap-1.5">
-                      <Icon name="clock" className="h-3.5 w-3.5 text-zinc-400" />
+                      <Icon name="clock" className="h-3.5 w-3.5 text-zinc-500" />
                       {o.timing}
                     </div>
                   )}
@@ -108,7 +108,7 @@ export function InvestigationBrief({ inv }: { inv: Inv }) {
 
       {evidence.length > 0 && (
         <div className="mt-5">
-          <p className="text-xs text-zinc-400">What it based this on</p>
+          <p className="text-xs text-zinc-500">What it based this on</p>
           <ul className="mt-2 space-y-2">
             {evidence.map((e, i) => (
               <li key={i} className="text-[13px] leading-snug text-zinc-600">
@@ -165,7 +165,7 @@ function Trace({ trace }: { trace: NonNullable<Inv["trace"]> }) {
 
   return (
     <div className="mt-5 border-t border-zinc-100 pt-3">
-      <button onClick={() => setOpen(!open)} className="flex items-center gap-1.5 text-[13px] text-zinc-500 hover:text-zinc-900">
+      <button onClick={() => setOpen(!open)} className="flex items-center gap-1.5 text-[13px] text-zinc-600 hover:text-zinc-900">
         <Icon name="chevron" className={cx("h-3.5 w-3.5 transition", open && "rotate-90")} />
         How the agent investigated ({steps.length} steps)
       </button>
@@ -175,7 +175,7 @@ function Trace({ trace }: { trace: NonNullable<Inv["trace"]> }) {
             const meta = TOOL[t.tool] || { verb: t.tool.replace(/_/g, " "), icon: "bolt" as IconName };
             return (
               <li key={i} className="relative flex items-start gap-2.5">
-                <span className="relative z-10 mt-px inline-flex h-[19px] w-[19px] shrink-0 items-center justify-center rounded-full bg-white text-zinc-400 ring-1 ring-zinc-200">
+                <span className="relative z-10 mt-px inline-flex h-[19px] w-[19px] shrink-0 items-center justify-center rounded-full bg-white text-zinc-500 ring-1 ring-zinc-200">
                   <Icon name={meta.icon} className="h-3 w-3" />
                 </span>
                 <span className="text-[13px] leading-snug text-zinc-700">{describe(t, meta.verb, parts, editions)}</span>

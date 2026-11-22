@@ -2,7 +2,7 @@
 
 **Your ERP says you're fine. Your paperwork says you're not.** Aurora is a team of specialised AI agents that finds the gap, prices it against your next deadline, and closes it within your own rules and with your approval: it reads every document (scans, handwriting, Korean/Polish/Chinese PDFs), plans backwards from the deadline, routes each decision to the one person your policy names, emails and **negotiates** with suppliers, and tracks the goods until they arrive.
 
-Built for the Lio challenge at START Hack Munich 2026. First customer: **Soony** — Grand Heist 6 launch, trucks leave Sunday 20:00.
+Built at START Hack Munich 2026. First customer: **Soony** — Grand Heist 6 launch, trucks leave Sunday 20:00.
 
 ## What it does for Soony (live, on the real data)
 
@@ -23,7 +23,7 @@ Goal → process → agents → people. One specialised agent per business task 
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r backend/requirements.txt
-cp .env.example .env            # LIO_TOKEN, OPENAI_API_KEY, GMAIL_USER, GMAIL_APP_PASSWORD, …
+cp .env.example .env            # LIO_TOKEN (data portal), OPENAI_API_KEY, GMAIL_USER, GMAIL_APP_PASSWORD, …
 cd backend
 ../.venv/bin/python -m aurora.cli pull          # download the customer's files
 ../.venv/bin/python -m aurora.cli extract-all   # read every document once (cached)

@@ -9,6 +9,8 @@ from __future__ import annotations
 import email
 import email.utils
 import imaplib
+import json
+import mimetypes
 
 import pandas as pd
 import os
@@ -79,7 +81,18 @@ def draft(world: World, case: dict, option: dict | None) -> dict:
     out["subject"] = f"[{case['id']}] {out['subject']}"
     out["to"] = contact["email"]
     out["supplier"] = contact["name"]
+    out["attachments"] = supplier_documents(world.tenant, (option or {}).get("evidence") or d["signal"]["evidence"])
     return out
+
+
+def supplier_documents(tenant, evidence: list[str]) -> list[str]:
+    """The supplier's own documents among the evidence (their offer, notice, confirmation), as paths
+    relative to the data root. Internal files (ERP, inspection reports, receiving) never leave the house."""
+    out = []
+    for e in evidence or []:
+        if e.startswith("suppliers/") and (tenant.data_root / e).is_file():
+            out.append(e)
+    return out[:2]
 
 
 def _configured() -> bool:
@@ -122,6 +135,17 @@ def send_for_case(store: Store, case_id: str, message: dict, approved_by: str,
         msg["In-Reply-To"] = in_reply_to
         msg["References"] = in_reply_to
     msg.set_content(message["body"] + "\n\n---\n" + message["body_en"])
+    from aurora.config import get_tenant
+    root = get_tenant().data_root
+    attached = []
+    for rel in message.get("attachments") or []:
+        f = root / rel
+        if not f.is_file():
+            continue
+        ctype = mimetypes.guess_type(f.name)[0] or "application/octet-stream"
+        main, sub = ctype.split("/", 1)
+        msg.add_attachment(f.read_bytes(), maintype=main, subtype=sub, filename=f.name)
+        attached.append(f.name)
     try:
         smtp_send(msg)
     except (OSError, smtplib.SMTPException) as e:   # host blocks SMTP or Gmail refuses: keep it in the outbox
@@ -132,7 +156,8 @@ def send_for_case(store: Store, case_id: str, message: dict, approved_by: str,
     store.add_message(case_id, "out", message["to"], message["subject"], message["body"], message["body_en"],
                       msg["Message-ID"], parsed)
     store.event(case_id, "comms", f"Email sent to {message['supplier']} ({msg['To']}"
-                                  + (f", test mode instead of {message['to']}" if override else "") + f"), approved by {approved_by}")
+                                  + (f", test mode instead of {message['to']}" if override else "") + f"), approved by {approved_by}"
+                                  + (f"; attached {', '.join(attached)}" if attached else ""))
     return {"sent": True, "message_id": msg["Message-ID"]}
 
 
@@ -186,25 +211,31 @@ def poll_replies(store: Store) -> list[dict]:
             sender = email.utils.parseaddr(msg.get("From", ""))[1].lower()
             if sender.split("+")[0] == me.split("@")[0] or sender == me:
                 continue  # our own notifications (plus-addressed) and sent copies
+            if _automated(sender, msg):
+                continue  # account alerts, newsletters, bounces: not supplier mail
             body = _text_of(msg)
+            inbox = tenant.state_dir / "inbox"
+            inbox.mkdir(exist_ok=True)
+            stem = f"{datetime.now():%Y%m%d-%H%M%S}_{uid.decode()}"
+            files = _save_attachments(msg, inbox, stem)
             tag = re.search(r"\[(C-\d{4})\]", msg.get("Subject", ""))
             refs = (msg.get("In-Reply-To", "") + " " + msg.get("References", "")).split()
             cid = tag.group(1) if tag and store.case(tag.group(1)) else next((thread_map[r] for r in refs if r in thread_map), None)
             if cid:
-                found.append(handle_case_reply(tenant, store, cid, msg, body))
+                body += _read_attachments(tenant, files)
+                found.append(handle_case_reply(tenant, store, cid, msg, body, [f.name for f in files]))
             else:
-                inbox = tenant.state_dir / "inbox"
-                inbox.mkdir(exist_ok=True)
-                name = f"{datetime.now():%Y%m%d-%H%M%S}_{uid.decode()}.txt"
+                name = f"{stem}.txt"
+                listed = "".join(f"\nAttachment: {f.name}" for f in files)
                 (inbox / name).write_text(f"From: {msg.get('From')}\nDate: {msg.get('Date')}\n"
-                                          f"Subject: {msg.get('Subject')}\n\n{body}")
-                found.append({"inbox": name, "from": sender})
+                                          f"Subject: {msg.get('Subject')}{listed}\n\n{body}")
+                found.append({"inbox": name, "from": sender, "attachments": [f.name for f in files]})
     store.put("imap_seen", sorted(seen))
     store.put("imap_last_uid", last_uid)
     return found
 
 
-def handle_case_reply(tenant, store: Store, cid: str, msg, body: str) -> dict:
+def handle_case_reply(tenant, store: Store, cid: str, msg, body: str, attachments: list[str] | None = None) -> dict:
     from aurora import negotiation as neg
     case = store.case(cid)
     d = case["data"]
@@ -216,7 +247,9 @@ def handle_case_reply(tenant, store: Store, cid: str, msg, body: str) -> dict:
     # read "today/tonight" on the plan's clock, so supplier times and deadlines compare like for like
     terms = neg.read_terms(body, msg.get("Subject", ""), planner.as_of.isoformat(timespec="minutes"))
     store.add_message(cid, "in", msg.get("From", ""), msg.get("Subject", ""), body, terms["summary_en"],
-                      msg.get("Message-ID", ""), terms)
+                      msg.get("Message-ID", ""), {**terms, "attachments": attachments or []})
+    if attachments:
+        store.event(cid, "reader", f"Read {len(attachments)} attachment(s) from the supplier: {', '.join(attachments)}")
     if case["status"] in ("AGREED", "IN_TRANSIT"):
         return track_reply(tenant, store, case, terms)
     ev = None
@@ -323,10 +356,72 @@ def check_deliveries(tenant, store: Store, world: World) -> list[str]:
     return done
 
 
-def _text_of(msg) -> str:
-    if msg.is_multipart():
-        for part in msg.walk():
-            if part.get_content_type() == "text/plain":
-                return part.get_payload(decode=True).decode(errors="replace")
+AUTOMATED = re.compile(r"(^|[._-])(no-?reply|do-?not-?reply|mailer-daemon|postmaster|notifications?)([._-]|@)", re.I)
+READABLE = {".pdf", ".png", ".jpg", ".jpeg", ".docx", ".xlsx", ".xlsm", ".csv", ".txt"}
+
+
+def _automated(sender: str, msg) -> bool:
+    """Machine mail (account alerts, bounces, bulk) is not a supplier writing to us."""
+    return bool(AUTOMATED.search(sender) or sender.endswith(("@accounts.google.com", "@google.com"))
+                or msg.get("Auto-Submitted", "no").lower() != "no" or msg.get("List-Unsubscribe"))
+
+
+def _save_attachments(msg, folder, stem: str) -> list:
+    """Save attachments the Document Reader can read next to the email; skip inline logos and the rest."""
+    out = []
+    for i, part in enumerate(msg.walk()):
+        name = part.get_filename()
+        if not name or part.get_content_maintype() == "multipart":
+            continue
+        name = str(make_header(decode_header(name)))
+        safe = re.sub(r"[^\w.\-]+", "_", name).strip("._") or f"attachment{i}"
+        if os.path.splitext(safe)[1].lower() not in READABLE:
+            continue
+        data = part.get_payload(decode=True) or b""
+        if not data:
+            continue
+        f = folder / f"{stem}_{safe}"
+        f.write_bytes(data)
+        out.append(f)
+    return out
+
+
+def _read_attachments(tenant, files: list) -> str:
+    """What each attachment says, as text the negotiation agent can weigh with the email body."""
+    if not files:
         return ""
-    return msg.get_payload(decode=True).decode(errors="replace")
+    from aurora.ingest.documents import DocumentReader
+    reader = DocumentReader(tenant)
+    parts = []
+    for f in files:
+        try:
+            facts = reader.extract(f)
+        except Exception as e:  # an unreadable file must not lose the reply
+            parts.append(f"\n\n[Attachment {f.name}: could not be read ({e})]")
+            continue
+        keep = {k: v for k, v in facts.items() if not k.startswith("_") and v not in (None, [], "", {})}
+        parts.append(f"\n\n[Attachment {f.name}, read by the Document Reader]\n"
+                     + json.dumps(keep, ensure_ascii=False)[:4000])
+    return "".join(parts)
+
+
+def _text_of(msg) -> str:
+    """Plain-text body; falls back to the HTML part with tags stripped (many mail apps send HTML only)."""
+    plain = html = None
+    for part in (msg.walk() if msg.is_multipart() else [msg]):
+        if part.get_filename():
+            continue
+        ctype = part.get_content_type()
+        if ctype == "text/plain" and plain is None:
+            plain = (part.get_payload(decode=True) or b"").decode(part.get_content_charset() or "utf-8", errors="replace")
+        elif ctype == "text/html" and html is None:
+            html = (part.get_payload(decode=True) or b"").decode(part.get_content_charset() or "utf-8", errors="replace")
+    if plain and plain.strip():
+        return plain
+    if html:
+        text = re.sub(r"(?is)<(script|style).*?</\1>", "", html)
+        text = re.sub(r"(?i)<br\s*/?>|</p>|</div>", "\n", text)
+        text = re.sub(r"<[^>]+>", "", text)
+        import html as _html
+        return re.sub(r"\n\s*\n+", "\n\n", _html.unescape(text)).strip()
+    return ""

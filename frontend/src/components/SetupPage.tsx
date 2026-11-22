@@ -70,9 +70,9 @@ export function SetupPage() {
         </div>
 
         {error && !data ? (
-          <Card className="mt-8 px-6 py-8 text-sm text-zinc-500">Couldn’t load the setup. Is the backend running?</Card>
+          <Card className="mt-8 px-6 py-8 text-sm text-zinc-600">Couldn’t load the setup. Is the backend running?</Card>
         ) : !data ? (
-          <Card className="mt-8 flex items-center gap-3 px-6 py-8 text-[15px] text-zinc-500">
+          <Card className="mt-8 flex items-center gap-3 px-6 py-8 text-[15px] text-zinc-600">
             <Pulse tone="amber" />
             The Onboarding agent is reading the memo, the approval policy and the org chart…
           </Card>
@@ -117,12 +117,12 @@ function Step({
       <Card>
         <div className="px-6 pb-2 pt-5">
           <h2 className="text-[18px] font-semibold tracking-tight text-zinc-900">{title}</h2>
-          <p className="mt-0.5 text-[14px] text-zinc-500">{explain}</p>
+          <p className="mt-0.5 text-[14px] text-zinc-600">{explain}</p>
         </div>
         <div className="px-6 py-4">{children}</div>
         {sources && sources.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 border-t border-zinc-100 px-6 py-3">
-            <span className="mr-1 text-xs text-zinc-400">Read from</span>
+            <span className="mr-1 text-xs text-zinc-500">Read from</span>
             {sources.map((s) => (
               <FileChip key={s} path={s} />
             ))}
@@ -156,8 +156,8 @@ function ConfirmFooter({ section, d }: { section: SetupSectionKey; d: Setup }) {
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-b-xl border-t border-zinc-100 bg-zinc-50/70 px-6 py-3">
-      <p className="flex items-center gap-2 text-[13px] text-zinc-500">
-        <Icon name="spark" className="h-3.5 w-3.5 text-zinc-400" />
+      <p className="flex items-center gap-2 text-[13px] text-zinc-600">
+        <Icon name="spark" className="h-3.5 w-3.5 text-zinc-500" />
         Proposed by the Onboarding agent
         {conf && (
           <span className="inline-flex items-center gap-1 text-emerald-700">
@@ -203,7 +203,7 @@ function SourcesStep({ d, n }: { d: Setup; n: number }) {
           <li key={s.kind} className="rounded-lg p-3.5 ring-1 ring-inset ring-zinc-200">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-[14px] font-medium text-zinc-900">
-                <Icon name={SOURCE_ICON[s.kind] || "doc"} className="text-zinc-400" />
+                <Icon name={SOURCE_ICON[s.kind] || "doc"} className="text-zinc-500" />
                 {s.kind}
               </span>
               <span
@@ -215,10 +215,10 @@ function SourcesStep({ d, n }: { d: Setup; n: number }) {
                 {s.status}
               </span>
             </div>
-            <p className="mt-2 truncate text-xs text-zinc-500" title={s.detail}>
+            <p className="mt-2 truncate text-xs text-zinc-600" title={s.detail}>
               {s.detail.replace(/^https?:\/\//, "")}
             </p>
-            {s.note && <p className="mt-1 text-xs text-zinc-400">{s.note}</p>}
+            {s.note && <p className="mt-1 text-xs text-zinc-500">{s.note}</p>}
           </li>
         ))}
       </ul>
@@ -245,19 +245,19 @@ function DataStep({ d, n }: { d: Setup; n: number }) {
     >
       <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
         <p className="tnum text-[28px] font-semibold tracking-tight text-zinc-900">
-          {num(docs.total)} <span className="text-[15px] font-normal text-zinc-500">documents read</span>
+          {num(docs.total)} <span className="text-[15px] font-normal text-zinc-600">documents read</span>
         </p>
         <div className="flex flex-wrap gap-1.5">
           {Object.entries(docs.by_language)
             .sort((a, b) => b[1] - a[1])
             .map(([l, n]) => (
               <span key={l} className="tnum rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-700">
-                {l} <span className="text-zinc-400">{n}</span>
+                {l} <span className="text-zinc-500">{n}</span>
               </span>
             ))}
         </div>
       </div>
-      <p className="tnum mt-2 text-[13px] text-zinc-500">
+      <p className="tnum mt-2 text-[13px] text-zinc-600">
         {types.map(([t, n], i) => (
           <span key={t}>
             {i > 0 && " · "}
@@ -306,7 +306,7 @@ function DataStep({ d, n }: { d: Setup; n: number }) {
       </button>
       {tables && (
         <table className="tnum mt-2 w-full animate-fade text-left text-[13px]">
-          <thead className="text-[11px] uppercase tracking-wide text-zinc-400">
+          <thead className="text-[11px] uppercase tracking-wide text-zinc-500">
             <tr>
               <th className="py-1.5 font-medium">Table</th>
               <th className="py-1.5 text-right font-medium">Rows</th>
@@ -318,7 +318,7 @@ function DataStep({ d, n }: { d: Setup; n: number }) {
               <tr key={t.table} className="border-t border-zinc-100 align-top">
                 <td className="py-2 text-zinc-800">{t.table.replace(/_/g, " ")}</td>
                 <td className="py-2 text-right text-zinc-600">{num(t.rows)}</td>
-                <td className="py-2 pl-6 text-xs text-zinc-500">
+                <td className="py-2 pl-6 text-xs text-zinc-600">
                   {t.configured.length > 0 && <span>{t.configured.length} configured</span>}
                   {t.configured.length > 0 && t.learned.length > 0 && " · "}
                   {t.learned.length > 0 && (
@@ -361,7 +361,7 @@ function LearnedRow({ s, confirm }: { s: Setup["sections"]["data"]["learned_sour
             {Math.round(s.confidence * 100)}% sure
           </span>
         </p>
-        <p className="mt-1 line-clamp-2 text-xs leading-snug text-zinc-500" title={s.reason}>
+        <p className="mt-1 line-clamp-2 text-xs leading-snug text-zinc-600" title={s.reason}>
           {s.reason}
         </p>
       </div>
@@ -408,19 +408,19 @@ function GoalStep({ d, n }: { d: Setup; n: number }) {
 
       <dl className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
         <div>
-          <dt className="text-xs text-zinc-400">Deadline</dt>
+          <dt className="text-xs text-zinc-500">Deadline</dt>
           <dd className="mt-0.5 text-[15px] font-medium text-zinc-900">{whenLong(g.deadline_at)}</dd>
-          <dd className="mt-0.5 text-[13px] leading-snug text-zinc-500">{meaning}</dd>
+          <dd className="mt-0.5 text-[13px] leading-snug text-zinc-600">{meaning}</dd>
         </div>
         <div>
-          <dt className="text-xs text-zinc-400">Site</dt>
+          <dt className="text-xs text-zinc-500">Site</dt>
           <dd className="mt-0.5 text-[15px] font-medium text-zinc-900">{g.site}</dd>
-          <dt className="mt-3 text-xs text-zinc-400">Success means</dt>
+          <dt className="mt-3 text-xs text-zinc-500">Success means</dt>
           <dd className="mt-0.5 text-[13px] leading-snug text-zinc-600">{metric}</dd>
         </div>
       </dl>
 
-      <p className="mt-5 text-xs text-zinc-400">Products, in priority order</p>
+      <p className="mt-5 text-xs text-zinc-500">Products, in priority order</p>
       <ol className="mt-2 space-y-2">
         {[...g.products]
           .sort((a, b) => a.priority - b.priority)
@@ -432,9 +432,9 @@ function GoalStep({ d, n }: { d: Setup; n: number }) {
               <div className="min-w-0">
                 <p className="text-[14px] font-medium text-zinc-900">
                   {p.name}
-                  {p.demand != null && <span className="tnum ml-2 font-normal text-zinc-400">{num(p.demand)} pre-ordered</span>}
+                  {p.demand != null && <span className="tnum ml-2 font-normal text-zinc-500">{num(p.demand)} pre-ordered</span>}
                 </p>
-                {p.reason && <p className="mt-0.5 text-[13px] leading-snug text-zinc-500">{p.reason}</p>}
+                {p.reason && <p className="mt-0.5 text-[13px] leading-snug text-zinc-600">{p.reason}</p>}
               </div>
             </li>
           ))}
@@ -442,13 +442,13 @@ function GoalStep({ d, n }: { d: Setup; n: number }) {
 
       {g.tolerances.length > 0 && (
         <>
-          <p className="mt-5 text-xs text-zinc-400">Limits Aurora respects</p>
+          <p className="mt-5 text-xs text-zinc-500">Limits Aurora respects</p>
           <ul className="mt-2 space-y-1.5">
             {g.tolerances.map((t, i) => {
               const [text] = splitSource(t);
               return (
                 <li key={i} className="flex items-start gap-2 text-[13px] leading-snug text-zinc-700">
-                  <Icon name="shield" className="mt-0.5 h-3.5 w-3.5 text-zinc-400" />
+                  <Icon name="shield" className="mt-0.5 h-3.5 w-3.5 text-zinc-500" />
                   {text}
                 </li>
               );
@@ -473,7 +473,7 @@ function GoalStep({ d, n }: { d: Setup; n: number }) {
 
       {d.sections.goal.checks?.length > 0 && (
         <div className="mt-5">
-          <p className="text-xs text-zinc-400">Matches the live config</p>
+          <p className="text-xs text-zinc-500">Matches the live config</p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {d.sections.goal.checks.map((c) => (
               <Tip
@@ -524,7 +524,7 @@ function RulesStep({ d, n }: { d: Setup; n: number }) {
       explain="Read from your own documents: who may approve what, who is away, and what may never ship."
       sources={r.sources}
     >
-      <p className="text-xs text-zinc-400">Approval limits</p>
+      <p className="text-xs text-zinc-500">Approval limits</p>
       <ol className="mt-2 space-y-1">
         {limits.map((l, i) => (
           <li key={i} className="flex items-center gap-3">
@@ -534,18 +534,18 @@ function RulesStep({ d, n }: { d: Setup; n: number }) {
             >
               <span className="flex h-full items-center px-2.5 text-[13px] text-zinc-800">{l.role}</span>
             </div>
-            <span className="tnum text-[13px] text-zinc-500">
+            <span className="tnum text-[13px] text-zinc-600">
               {l.max_eur_exclusive != null ? `below ${eur(l.max_eur_exclusive)}` : l.jointly_with ? `above that, jointly with the ${l.jointly_with}` : "no limit"}
             </span>
           </li>
         ))}
       </ol>
-      <p className="mt-2 text-xs text-zinc-400">
+      <p className="mt-2 text-xs text-zinc-500">
         Exceptions: {r.exception_role}. Final say on quality release: {r.quality_final_say}. Conditional supplier releases
         last {r.conditional_release_days} days.
       </p>
 
-      <p className="mt-6 text-xs text-zinc-400">People</p>
+      <p className="mt-6 text-xs text-zinc-500">People</p>
       <ul className="mt-2 grid gap-x-6 gap-y-2 sm:grid-cols-2">
         {r.people.map((p) => (
           <li key={p.name + p.role} className="flex items-start gap-2.5">
@@ -553,7 +553,7 @@ function RulesStep({ d, n }: { d: Setup; n: number }) {
             <div className="min-w-0">
               <p className="text-[13px] text-zinc-900">
                 <span className="font-medium">{p.name}</span>
-                <span className="text-zinc-500">
+                <span className="text-zinc-600">
                   {" "}
                   · {p.role}
                   {p.category ? `, ${p.category}` : ""}
@@ -574,13 +574,13 @@ function RulesStep({ d, n }: { d: Setup; n: number }) {
           {r.site_leads.map((s) => (
             <span key={s.site}>
               Dock slots at {s.site}: <span className="font-medium text-zinc-900">{s.lead}</span>
-              {s.deputy && <span className="text-zinc-500"> (deputy {s.deputy})</span>}
+              {s.deputy && <span className="text-zinc-600"> (deputy {s.deputy})</span>}
             </span>
           ))}
         </p>
       )}
 
-      <p className="mt-6 text-xs text-zinc-400">Priority and release rules</p>
+      <p className="mt-6 text-xs text-zinc-500">Priority and release rules</p>
       <ul className="mt-2 space-y-2">
         {[...r.priority_rules, ...r.release_rules].map((x, i) => (
           <li key={i} className="border-l-2 border-zinc-200 pl-3 text-[13px] leading-snug text-zinc-700">
@@ -589,7 +589,7 @@ function RulesStep({ d, n }: { d: Setup; n: number }) {
               href={fileUrl(resolvePath(x.source))}
               target="_blank"
               rel="noreferrer"
-              className="whitespace-nowrap text-xs text-zinc-400 hover:text-zinc-700 hover:underline"
+              className="whitespace-nowrap text-xs text-zinc-500 hover:text-zinc-700 hover:underline"
             >
               {docName(x.source)}
             </a>
@@ -653,7 +653,7 @@ function AutonomyStep({ d, n }: { d: Setup; n: number }) {
               )}
             >
               <p className="text-[14px] font-medium text-zinc-900">{t.title}</p>
-              <p className="text-xs text-zinc-500">{t.explain}</p>
+              <p className="text-xs text-zinc-600">{t.explain}</p>
               <ul className="mt-2.5 space-y-1">
                 {list.length ? (
                   list.map((p) => (
@@ -662,7 +662,7 @@ function AutonomyStep({ d, n }: { d: Setup; n: number }) {
                     </li>
                   ))
                 ) : (
-                  <li className="text-[13px] text-zinc-400">
+                  <li className="text-[13px] text-zinc-500">
                     {t.tier === "never" ? a.never.join(", ") : "Nothing yet"}
                   </li>
                 )}
@@ -691,7 +691,7 @@ function AutonomyStep({ d, n }: { d: Setup; n: number }) {
 function Fact({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-xs text-zinc-400">{label}</dt>
+      <dt className="text-xs text-zinc-500">{label}</dt>
       <dd className="mt-0.5 text-[13px] leading-snug text-zinc-700">{children}</dd>
     </div>
   );
@@ -703,12 +703,12 @@ function Coverage({ d }: { d: Setup }) {
   const families = d.sections.autonomy.playbooks.map((p) => p.title);
   return (
     <section className="relative pl-12">
-      <span className="absolute left-0 top-5 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-zinc-500 ring-1 ring-zinc-200">
+      <span className="absolute left-0 top-5 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-zinc-600 ring-1 ring-zinc-200">
         <Icon name="shield" className="h-4 w-4" />
       </span>
       <Card className="px-6 py-5">
         <h2 className="text-[16px] font-semibold text-zinc-900">Coverage</h2>
-        <p className="mt-0.5 text-[13px] text-zinc-500">Problem families the agents handle today.</p>
+        <p className="mt-0.5 text-[13px] text-zinc-600">Problem families the agents handle today.</p>
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {families.map((f) => (
             <li key={f} className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-700">
@@ -719,7 +719,7 @@ function Coverage({ d }: { d: Setup }) {
             Unknown problems → review → new playbook
           </li>
         </ul>
-        <p className="mt-4 border-t border-zinc-100 pt-3 text-[13px] text-zinc-500">
+        <p className="mt-4 border-t border-zinc-100 pt-3 text-[13px] text-zinc-600">
           Same product, new config: toy maker before Christmas · automotive start of production · pharma launch · retail
           season
         </p>
@@ -737,7 +737,7 @@ function FileChip({ path }: { path: string }) {
       title={path}
       className="inline-flex max-w-[260px] items-center gap-1 rounded-md bg-white px-1.5 py-0.5 text-xs text-zinc-600 ring-1 ring-inset ring-zinc-200 transition hover:text-zinc-900 hover:ring-zinc-400"
     >
-      <Icon name="doc" className="h-3 w-3 text-zinc-400" />
+      <Icon name="doc" className="h-3 w-3 text-zinc-500" />
       <span className="truncate">{prettyName(path)}</span>
     </a>
   );

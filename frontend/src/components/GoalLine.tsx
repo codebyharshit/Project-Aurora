@@ -122,9 +122,9 @@ function goalPieces(c: CaseSummary, compact?: boolean): Piece[] {
       key: "rule",
       node: (
         <>
-          <Icon name="shield" className="h-3 w-3 text-zinc-400" />
+          <Icon name="shield" className="h-3 w-3 text-zinc-500" />
           <span className="max-w-[320px] truncate">Rule: {rule.text}</span>
-          {rule.source && <span className="text-zinc-400">· {ruleSourceName(rule.source)}</span>}
+          {rule.source && <span className="text-zinc-500">· {ruleSourceName(rule.source)}</span>}
         </>
       ),
       tip: `${rule.text}${rule.ref ? ` · ${rule.ref}` : ""}${rule.source ? ` · ${prettyName(rule.source)}` : ""}`,
@@ -140,7 +140,7 @@ function goalPieces(c: CaseSummary, compact?: boolean): Piece[] {
       key: "ev",
       node: (
         <>
-          <Icon name="doc" className="h-3 w-3 text-zinc-400" />
+          <Icon name="doc" className="h-3 w-3 text-zinc-500" />
           <span className="tnum">{evidence} evidence</span>
         </>
       ),
@@ -154,8 +154,8 @@ function goalPieces(c: CaseSummary, compact?: boolean): Piece[] {
       key: "agent",
       node: (
         <>
-          <Icon name="bolt" className="h-3 w-3 text-zinc-400" />
-          {a.name} <span className="text-zinc-400">· step {a.step}</span>
+          <Icon name="bolt" className="h-3 w-3 text-zinc-500" />
+          {a.name} <span className="text-zinc-500">· step {a.step}</span>
         </>
       ),
       tip: `Raised by the ${a.name} agent on step ${a.step} of Soony’s process.`,

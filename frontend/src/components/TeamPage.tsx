@@ -49,16 +49,16 @@ export function TeamPage() {
       <main className="mx-auto max-w-[1120px] space-y-6 px-5 pb-20 pt-6">
         <div>
           <h1 className="text-[24px] font-semibold tracking-tight text-soony-ink">The AI team</h1>
-          <p className="mt-1 text-[14px] text-zinc-500">
+          <p className="mt-1 text-[14px] text-zinc-600">
             One specialised agent per business task, mapped to Soony’s process. Each knows the goal, the rules and who
             approves.
           </p>
         </div>
 
         {error && !agentsData ? (
-          <Card className="px-6 py-8 text-sm text-zinc-500">Couldn’t load the AI team. Is the backend running?</Card>
+          <Card className="px-6 py-8 text-sm text-zinc-600">Couldn’t load the AI team. Is the backend running?</Card>
         ) : !agentsData || !ov ? (
-          <Card className="flex items-center gap-3 px-6 py-8 text-[15px] text-zinc-500">
+          <Card className="flex items-center gap-3 px-6 py-8 text-[15px] text-zinc-600">
             <Pulse tone="amber" /> Gathering the team…
           </Card>
         ) : (
@@ -71,10 +71,10 @@ export function TeamPage() {
                 <h2 className="text-[17px] font-semibold tracking-tight text-zinc-900">
                   Matching · Chasing · Exception handling
                 </h2>
-                <p className="text-xs text-zinc-400">the operative layer · {agents.length} agents</p>
+                <p className="text-xs text-zinc-500">the operative layer · {agents.length} agents</p>
               </div>
               {layer && (
-                <p className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-zinc-500">
+                <p className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-zinc-600">
                   {Object.entries(layer).map(([k, ids]) => (
                     <span key={k}>
                       <span className="font-medium text-zinc-700">{k.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase())}:</span>{" "}
@@ -154,15 +154,15 @@ function GoalHeader({ ov, agentsData, setup }: { ov: Overview; agentsData: Agent
 
   return (
     <Card className="p-6">
-      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
-        <Icon name="target" className="h-3.5 w-3.5 text-zinc-400" />
+      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-600">
+        <Icon name="target" className="h-3.5 w-3.5 text-zinc-500" />
         The goal every agent serves
       </p>
       <p className="mt-2.5 max-w-3xl text-[18px] font-medium leading-snug tracking-tight text-soony-ink">{objective}</p>
 
       <div className="mt-5 grid gap-x-10 gap-y-5 md:grid-cols-[1fr_1fr]">
         <div>
-          <p className="text-xs text-zinc-400">Priorities</p>
+          <p className="text-xs text-zinc-500">Priorities</p>
           <ol className="mt-2 space-y-2">
             {[...priorities]
               .sort((a, b) => a.priority - b.priority)
@@ -176,7 +176,7 @@ function GoalHeader({ ov, agentsData, setup }: { ov: Overview; agentsData: Agent
                     <div className="min-w-0">
                       <p className="tnum text-[14px] text-zinc-900">
                         <span className="font-medium">{shortEdition(p.name)}</span>
-                        <span className="text-zinc-500">
+                        <span className="text-zinc-600">
                           {" "}
                           · tolerance {num(p.tolerance_pct)}%
                           {p.value_per_unit_eur != null && (
@@ -187,7 +187,7 @@ function GoalHeader({ ov, agentsData, setup }: { ov: Overview; agentsData: Agent
                         </span>
                       </p>
                       {s && (
-                        <p className="tnum text-[12.5px] text-zinc-500">
+                        <p className="tnum text-[12.5px] text-zinc-600">
                           Now <span className="font-medium text-zinc-800">{pct(s.now)}</span>
                           {Math.abs(s.after - s.now) >= 0.05 && (
                             <>
@@ -198,7 +198,7 @@ function GoalHeader({ ov, agentsData, setup }: { ov: Overview; agentsData: Agent
                           of launch
                         </p>
                       )}
-                      {p.why && <p className="mt-0.5 line-clamp-2 text-[12.5px] leading-snug text-zinc-500">{p.why}</p>}
+                      {p.why && <p className="mt-0.5 line-clamp-2 text-[12.5px] leading-snug text-zinc-600">{p.why}</p>}
                     </div>
                   </li>
                 );
@@ -207,11 +207,11 @@ function GoalHeader({ ov, agentsData, setup }: { ov: Overview; agentsData: Agent
         </div>
         <div className="space-y-4">
           <div>
-            <p className="text-xs text-zinc-400">Ranking rule</p>
+            <p className="text-xs text-zinc-500">Ranking rule</p>
             <p className="mt-1 text-[13.5px] leading-snug text-zinc-700">{ranking}</p>
           </div>
           <div>
-            <p className="text-xs text-zinc-400">Status</p>
+            <p className="text-xs text-zinc-500">Status</p>
             <p className="mt-1 flex items-start gap-2 text-[13.5px] leading-snug text-zinc-700">
               <span
                 className={cx(
@@ -227,7 +227,7 @@ function GoalHeader({ ov, agentsData, setup }: { ov: Overview; agentsData: Agent
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-4">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-xs text-zinc-400">Read from</span>
+          <span className="mr-1 text-xs text-zinc-500">Read from</span>
           {sources.map((s) => (
             <a
               key={s}
@@ -237,7 +237,7 @@ function GoalHeader({ ov, agentsData, setup }: { ov: Overview; agentsData: Agent
               title={prettyName(s)}
               className="inline-flex max-w-[260px] items-center gap-1 rounded-md bg-white px-1.5 py-0.5 text-xs text-zinc-600 ring-1 ring-inset ring-zinc-200 transition hover:text-zinc-900 hover:ring-zinc-400"
             >
-              <Icon name="doc" className="h-3 w-3 text-zinc-400" />
+              <Icon name="doc" className="h-3 w-3 text-zinc-500" />
               <span className="truncate">{docName(s)}</span>
             </a>
           ))}
@@ -265,7 +265,7 @@ function StepGroup({ step, open, children }: { step?: ProcessStep; open: number;
         <h3 className="text-[15px] font-semibold text-zinc-900">
           {step ? (
             <>
-              <span className="mr-1.5 text-zinc-400" aria-hidden>
+              <span className="mr-1.5 text-zinc-500" aria-hidden>
                 {CIRCLED[step.step - 1]}
               </span>
               {step.name}
@@ -276,11 +276,11 @@ function StepGroup({ step, open, children }: { step?: ProcessStep; open: number;
         </h3>
         {step && (
           <>
-            <span className="text-[13px] text-zinc-500">{step.system_today}</span>
+            <span className="text-[13px] text-zinc-600">{step.system_today}</span>
             <span
               className={cx(
                 "rounded px-1 py-px text-[10px] font-medium uppercase tracking-wide",
-                hadSystem(step) ? "text-zinc-500 ring-1 ring-inset ring-zinc-200" : "bg-soony-blue/8 text-soony-blue",
+                hadSystem(step) ? "text-zinc-600 ring-1 ring-inset ring-zinc-200" : "bg-soony-blue/8 text-soony-blue",
               )}
             >
               {hadSystem(step) ? "had a system" : "now an agent"}
@@ -339,7 +339,7 @@ function AgentCard({
           <span
             className={cx(
               "mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-              act.count > 0 ? "bg-soony-blue/8 text-soony-blue" : "bg-zinc-100 text-zinc-500",
+              act.count > 0 ? "bg-soony-blue/8 text-soony-blue" : "bg-zinc-100 text-zinc-600",
             )}
           >
             <Icon name={AGENT_ICON[a.id] || "bolt"} className="h-4 w-4" />
@@ -347,11 +347,6 @@ function AgentCard({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <h4 className="text-[15px] font-semibold text-zinc-900">{a.name}</h4>
-              {a.lio_equivalent && (
-                <Chip tone="blue" className="!py-0 text-[11px]" title="The matching Lio agent type">
-                  Lio: {a.lio_equivalent}
-                </Chip>
-              )}
               {a.aop_tier && (
                 <Chip tone="ghost" className="!py-0 text-[11px]" title="Autonomy tier">
                   {TIER_WORD[a.aop_tier] || a.aop_tier}
@@ -363,20 +358,20 @@ function AgentCard({
         </div>
 
         <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[12.5px]">
-          <dt className="text-zinc-400">Trigger</dt>
+          <dt className="text-zinc-500">Trigger</dt>
           <dd className="text-zinc-700">{a.trigger}</dd>
-          <dt className="text-zinc-400">Alone</dt>
+          <dt className="text-zinc-500">Alone</dt>
           <dd className="text-zinc-700">
             <span className={alone.alone ? "text-emerald-700" : "text-amber-700"}>{alone.text}</span>
             {a.needs_human && a.needs_human !== "Never" && (
-              <span className="text-zinc-500"> · needs a person: {lowerFirst(a.needs_human)}</span>
+              <span className="text-zinc-600"> · needs a person: {lowerFirst(a.needs_human)}</span>
             )}
           </dd>
-          <dt className="text-zinc-400">Kind</dt>
+          <dt className="text-zinc-500">Kind</dt>
           <dd className="text-zinc-700">{a.kind}</dd>
         </dl>
 
-        <p className="mt-3 flex items-center gap-2 text-[12.5px] text-zinc-500">
+        <p className="mt-3 flex items-center gap-2 text-[12.5px] text-zinc-600">
           {act.count > 0 ? <Pulse tone="green" /> : <span className="inline-block h-2 w-2 rounded-full bg-zinc-200" />}
           {label}
         </p>
@@ -399,7 +394,7 @@ function AgentCard({
                 <span className="truncate">{shortTitle(c, parts)}</span>
               </button>
             ))}
-            {cases.length > 4 && <span className="self-center text-[11px] text-zinc-400">+{cases.length - 4} more</span>}
+            {cases.length > 4 && <span className="self-center text-[11px] text-zinc-500">+{cases.length - 4} more</span>}
           </div>
         )}
       </div>
@@ -409,10 +404,10 @@ function AgentCard({
           <button
             onClick={() => setMore(!more)}
             aria-expanded={more}
-            className="flex w-full items-center justify-between gap-2 px-4 py-2 text-left text-[12.5px] text-zinc-500 transition hover:text-zinc-900"
+            className="flex w-full items-center justify-between gap-2 px-4 py-2 text-left text-[12.5px] text-zinc-600 transition hover:text-zinc-900"
           >
             <span>
-              {extra.title} <span className="tnum text-zinc-400">{extra.count}</span>
+              {extra.title} <span className="tnum text-zinc-500">{extra.count}</span>
             </span>
             <Icon name="chevron" className={cx("h-3.5 w-3.5 transition", more && "rotate-90")} />
           </button>
@@ -456,7 +451,7 @@ function AutonomyLadder({ agentsData, setup, ov }: { agentsData: AgentsResponse;
     <section>
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-[17px] font-semibold tracking-tight text-zinc-900">What they may do alone</h2>
-        <p className="text-xs text-zinc-400">
+        <p className="text-xs text-zinc-500">
           a playbook moves up one rung after {earned} clean approvals · <Link href="/setup#autonomy" className="underline-offset-2 hover:text-soony-blue hover:underline">change in Setup</Link>
         </p>
       </div>
@@ -481,7 +476,7 @@ function AutonomyLadder({ agentsData, setup, ov }: { agentsData: AgentsResponse;
                     </span>
                     {TIER_WORD[tier]}
                   </p>
-                  <p className="mt-1 text-xs text-zinc-500">{TIER_EXPLAIN[tier]}</p>
+                  <p className="mt-1 text-xs text-zinc-600">{TIER_EXPLAIN[tier]}</p>
                   <ul className="mt-2.5 space-y-1.5">
                     {tier === "never" && list.length === 0
                       ? never.map((n) => (
@@ -500,7 +495,7 @@ function AutonomyLadder({ agentsData, setup, ov }: { agentsData: AgentsResponse;
                               )}
                             </li>
                           ))
-                        : <li className="text-[13px] text-zinc-400">Nothing yet</li>}
+                        : <li className="text-[13px] text-zinc-500">Nothing yet</li>}
                     {tier === "never" && list.length > 0 && never.map((n) => (
                       <li key={n} className="text-[13px] leading-snug text-zinc-700">
                         {n.replace(/^./, (c) => c.toUpperCase())}
@@ -512,7 +507,7 @@ function AutonomyLadder({ agentsData, setup, ov }: { agentsData: AgentsResponse;
             );
           })}
         </ol>
-        <p className="mt-4 border-t border-zinc-100 pt-3 text-[12.5px] text-zinc-500">
+        <p className="mt-4 border-t border-zinc-100 pt-3 text-[12.5px] text-zinc-600">
           Observe → ask → commit, earned after {earned} clean approvals; payments, bank details and contracts never.
         </p>
       </Card>

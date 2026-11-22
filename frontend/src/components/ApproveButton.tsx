@@ -159,7 +159,7 @@ export function ApproveButton({
             >
               <p className="text-[13px] leading-snug text-zinc-600">{consequence}</p>
               <label className="block">
-                <span className="mb-1 block text-xs font-medium text-zinc-500">Approve as</span>
+                <span className="mb-1 block text-xs font-medium text-zinc-600">Approve as</span>
                 <input
                   ref={input}
                   value={name}
@@ -169,7 +169,7 @@ export function ApproveButton({
                   disabled={state.s === "sending"}
                 />
                 {first && (
-                  <span className="mt-1 block text-[11px] leading-snug text-zinc-400">
+                  <span className="mt-1 block text-[11px] leading-snug text-zinc-500">
                     Policy routes this to {first.person || first.role} ({first.role}) · {first.policy_ref}
                   </span>
                 )}

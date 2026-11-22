@@ -47,7 +47,7 @@ export function AgentsFeed({ agents, max = 5 }: { agents: AgentInfo[]; max?: num
           <Pulse />
           Agents at work
         </p>
-        <Link href="/team" className="text-xs text-zinc-500 underline-offset-2 hover:text-soony-blue hover:underline">
+        <Link href="/team" className="text-xs text-zinc-600 underline-offset-2 hover:text-soony-blue hover:underline">
           See the AI team →
         </Link>
       </div>
@@ -64,7 +64,7 @@ export function AgentsFeed({ agents, max = 5 }: { agents: AgentInfo[]; max?: num
               <span
                 className={cx(
                   "mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full",
-                  act.count > 0 ? "bg-soony-blue/8 text-soony-blue" : "bg-zinc-100 text-zinc-400",
+                  act.count > 0 ? "bg-soony-blue/8 text-soony-blue" : "bg-zinc-100 text-zinc-500",
                 )}
               >
                 <Icon name={AGENT_ICON[a.id] || "bolt"} className="h-3.5 w-3.5" />
@@ -73,10 +73,10 @@ export function AgentsFeed({ agents, max = 5 }: { agents: AgentInfo[]; max?: num
                 <span className="flex items-baseline gap-2">
                   <span className="text-[14px] font-medium text-zinc-900">{a.name}</span>
                   {steps.length > 0 && (
-                    <span className="text-[11px] text-zinc-400">step {steps.join(", ")}</span>
+                    <span className="text-[11px] text-zinc-500">step {steps.join(", ")}</span>
                   )}
                 </span>
-                <span className="mt-0.5 line-clamp-1 block text-[13px] text-zinc-500">{label}</span>
+                <span className="mt-0.5 line-clamp-1 block text-[13px] text-zinc-600">{label}</span>
               </span>
             </li>
           );

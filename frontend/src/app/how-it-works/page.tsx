@@ -87,7 +87,7 @@ export default function Page() {
       <Section>
         <Eyebrow>The team</Eyebrow>
         <div className="mt-3">
-          <H2 sub="Named for the business task each one owns, in the same vocabulary as Lio’s agents. See them live on the AI team page.">
+          <H2 sub="Named for the business task each one owns. See them live on the AI team page.">
             14 agents, one job each
           </H2>
         </div>

@@ -7,11 +7,11 @@ import { cx, Icon, Src } from "./ui";
 /** Compact chip that opens a cited file. */
 export function EvidenceLink({ raw }: { raw: string }) {
   const item = classify(raw);
-  if (item.kind === "quote") return <span className="text-xs italic text-zinc-500">“{item.text}”</span>;
+  if (item.kind === "quote") return <span className="text-xs italic text-zinc-600">“{item.text}”</span>;
   if (item.kind === "ref")
     return (
-      <span className="inline-flex items-center gap-1 rounded-md bg-zinc-50 px-1.5 py-0.5 text-xs text-zinc-500 ring-1 ring-inset ring-zinc-200">
-        <Icon name="doc" className="h-3 w-3 text-zinc-400" />
+      <span className="inline-flex items-center gap-1 rounded-md bg-zinc-50 px-1.5 py-0.5 text-xs text-zinc-600 ring-1 ring-inset ring-zinc-200">
+        <Icon name="doc" className="h-3 w-3 text-zinc-500" />
         {item.label}
       </span>
     );
@@ -23,7 +23,7 @@ export function EvidenceLink({ raw }: { raw: string }) {
       className="inline-flex max-w-[280px] items-center gap-1 rounded-md bg-white px-1.5 py-0.5 text-xs text-zinc-600 ring-1 ring-inset ring-zinc-200 transition hover:text-zinc-900 hover:ring-zinc-400"
       title={item.path}
     >
-      <Icon name={item.kind === "image" ? "image" : "doc"} className="h-3 w-3 text-zinc-400" />
+      <Icon name={item.kind === "image" ? "image" : "doc"} className="h-3 w-3 text-zinc-500" />
       <span className="truncate">{item.label}</span>
     </a>
   );
@@ -39,7 +39,7 @@ export function EvidencePanel({ items }: { items: string[] }) {
   const refs = parsed.filter((p): p is Extract<EvidenceItem, { kind: "ref" }> => p.kind === "ref");
   const quotes = parsed.filter((p): p is Extract<EvidenceItem, { kind: "quote" }> => p.kind === "quote");
 
-  if (!parsed.length) return <p className="text-[13px] text-zinc-400">No documents cited.</p>;
+  if (!parsed.length) return <p className="text-[13px] text-zinc-500">No documents cited.</p>;
 
   return (
     <div className="space-y-3">
@@ -49,7 +49,7 @@ export function EvidencePanel({ items }: { items: string[] }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={img.url} alt={img.label} className="max-h-[420px] w-full object-contain" />
           </a>
-          <figcaption className="flex items-center justify-between gap-2 border-t border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-500">
+          <figcaption className="flex items-center justify-between gap-2 border-t border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-600">
             <span className="flex min-w-0 items-center gap-1.5">
               <Src>Scan</Src>
               <span className="truncate">{img.label}</span>
@@ -66,7 +66,7 @@ export function EvidencePanel({ items }: { items: string[] }) {
           key={i}
           className="border-l-2 border-amber-400 bg-amber-50/40 py-1.5 pl-3 pr-2 text-[13px] italic leading-snug text-zinc-700"
         >
-          “{q.text}”<span className="ml-1 not-italic text-[11px] text-zinc-400">read by the Document Reader</span>
+          “{q.text}”<span className="ml-1 not-italic text-[11px] text-zinc-500">read by the Document Reader</span>
         </blockquote>
       ))}
 
@@ -91,9 +91,9 @@ export function EvidencePanel({ items }: { items: string[] }) {
           {refs.map((r) => (
             <span
               key={r.label}
-              className="inline-flex items-center gap-1.5 rounded-md bg-zinc-50 px-2 py-1 text-xs text-zinc-500 ring-1 ring-inset ring-zinc-200"
+              className="inline-flex items-center gap-1.5 rounded-md bg-zinc-50 px-2 py-1 text-xs text-zinc-600 ring-1 ring-inset ring-zinc-200"
             >
-              <Icon name="doc" className="h-3 w-3 text-zinc-400" />
+              <Icon name="doc" className="h-3 w-3 text-zinc-500" />
               {r.label}
             </span>
           ))}
@@ -109,10 +109,10 @@ function PdfCard({ url, label, path }: { url: string; label: string; path: strin
     <div className="overflow-hidden rounded-lg ring-1 ring-zinc-200">
       <div className="flex items-center justify-between gap-2 bg-white px-3 py-2">
         <span className="flex min-w-0 items-center gap-2 text-[13px] text-zinc-700" title={path}>
-          <Icon name="doc" className="text-zinc-400" />
+          <Icon name="doc" className="text-zinc-500" />
           <span className="truncate">{label}</span>
         </span>
-        <span className="flex shrink-0 items-center gap-3 text-xs text-zinc-500">
+        <span className="flex shrink-0 items-center gap-3 text-xs text-zinc-600">
           <button onClick={() => setPreview(!preview)} className="hover:text-zinc-900">
             {preview ? "Hide preview" : "Preview"}
           </button>

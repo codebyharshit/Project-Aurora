@@ -92,6 +92,7 @@ Extract facts exactly as the document states them:
 Do not invent values; use null when the document does not say."""
 
 IMAGE_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
+INBOX_TYPES = {".txt", ".pdf", ".docx", ".xlsx", ".xlsm", ".csv", *IMAGE_TYPES}
 
 
 def sha256(path: Path) -> str:
@@ -150,7 +151,8 @@ class DocumentReader:
 
     def document_paths(self) -> list[Path]:
         pats = self.tenant.cfg.get("documents", [])
-        out = sorted((self.tenant.state_dir / "inbox").glob("*.txt"))
+        inbox = self.tenant.state_dir / "inbox"   # emails and their attachments, saved by the comms agent
+        out = sorted(f for f in inbox.glob("*") if f.suffix.lower() in INBOX_TYPES) if inbox.exists() else []
         for p in sorted(self.root.rglob("*")):
             if p.is_file():
                 rel = str(p.relative_to(self.root))

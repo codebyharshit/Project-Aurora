@@ -4,7 +4,7 @@ import { Cta, PageHero, Section, SiteShell } from "@/components/Site";
 
 export const metadata: Metadata = {
   title: "Team LUMI · Aurora",
-  description: "The people behind Aurora, built at START Hack Munich 2026 for the Lio challenge.",
+  description: "The people behind Aurora, built at START Hack Munich 2026.",
 };
 
 const TEAM = ["Harshit Agarwal", "Zorawar Singh", "Mikail Ugur", "Jakub Walentek", "Antonina Begacheva"];
@@ -31,7 +31,7 @@ export default function Page() {
       <PageHero
         eyebrow="Team LUMI"
         title="Five people, one weekend, one launch to save"
-        sub="We built Aurora at START Hack Munich 2026 for the Lio challenge “Keep the Line Running”: a young startup with one paying customer, a hard deadline, and a chance to prove we are worth the contract."
+        sub="We built Aurora at START Hack Munich 2026 for the challenge “Keep the Line Running”: a young startup with one paying customer, a hard deadline, and a chance to prove we are worth the contract."
       />
 
       <Section>
@@ -64,7 +64,7 @@ export default function Page() {
           <div>
             <h2 className="text-[24px] font-semibold tracking-tight text-zinc-900">Thank you</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-zinc-600">
-              To Lio for the challenge and to Soony’s project team for the office hours. “Data is a mess, we find out at the
+              To the challenge team and to Soony’s project team for the office hours. “Data is a mess, we find out at the
               dock, and a 1–2% delay is fine as long as pre-orders are served” shaped the goal every agent works toward.
             </p>
           </div>

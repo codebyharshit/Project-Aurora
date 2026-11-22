@@ -405,6 +405,9 @@ def source_confirm(body: SourceConfirm) -> dict:
 @app.get("/api/files/{path:path}")
 def file(path: str) -> FileResponse:
     root = tenant.data_root.resolve()
+    if path.startswith("inbox/"):   # emails and attachments the comms agent saved
+        root = (tenant.state_dir / "inbox").resolve()
+        path = path.removeprefix("inbox/")
     target = (root / path).resolve()
     if root not in target.parents or not target.is_file():
         raise HTTPException(404, "not found")

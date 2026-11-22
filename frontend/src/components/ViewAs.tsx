@@ -45,15 +45,15 @@ export function ViewAs({ counts }: { counts?: Record<string, number> }) {
         {who ? (
           <Avatar name={who} size={20} tone="blue" />
         ) : (
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-zinc-100 text-zinc-500">
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-zinc-100 text-zinc-600">
             <Icon name="people" className="h-3 w-3" />
           </span>
         )}
         <span className="max-w-[150px] truncate">
-          <span className="text-zinc-400">View as </span>
+          <span className="text-zinc-500">View as </span>
           <span className="font-medium text-zinc-900">{who || "Everyone"}</span>
         </span>
-        <Icon name="chevron" className={cx("h-3.5 w-3.5 text-zinc-400 transition", open ? "-rotate-90" : "rotate-90")} />
+        <Icon name="chevron" className={cx("h-3.5 w-3.5 text-zinc-500 transition", open ? "-rotate-90" : "rotate-90")} />
       </button>
 
       {open && (
@@ -68,7 +68,7 @@ export function ViewAs({ counts }: { counts?: Record<string, number> }) {
               setOpen(false);
             }}
             left={
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-zinc-100 text-zinc-500">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-zinc-100 text-zinc-600">
                 <Icon name="people" className="h-3.5 w-3.5" />
               </span>
             }
@@ -77,7 +77,7 @@ export function ViewAs({ counts }: { counts?: Record<string, number> }) {
           />
           <div className="mx-2 my-1 h-px bg-zinc-100" />
           {!people ? (
-            <p className="px-3 py-2 text-xs text-zinc-400">Loading people…</p>
+            <p className="px-3 py-2 text-xs text-zinc-500">Loading people…</p>
           ) : (
             <div className="max-h-[360px] overflow-y-auto">
               {people.map((p) => {
@@ -99,7 +99,7 @@ export function ViewAs({ counts }: { counts?: Record<string, number> }) {
                           {n}
                         </span>
                       ) : (
-                        <span className="text-[11px] text-zinc-300">—</span>
+                        <span className="text-[11px] text-zinc-500">—</span>
                       )
                     }
                   />
@@ -107,7 +107,7 @@ export function ViewAs({ counts }: { counts?: Record<string, number> }) {
               })}
             </div>
           )}
-          {me?.scope && <p className="px-3 pb-1.5 pt-2 text-[11px] text-zinc-400">{me.scope}</p>}
+          {me?.scope && <p className="px-3 pb-1.5 pt-2 text-[11px] text-zinc-500">{me.scope}</p>}
         </div>
       )}
     </div>
@@ -144,7 +144,7 @@ function Row({
         <span className={cx("block truncate text-[13px]", selected ? "font-semibold text-soony-blue" : "text-zinc-900")}>
           {title}
         </span>
-        {sub && <span className="block truncate text-[11px] text-zinc-400">{sub}</span>}
+        {sub && <span className="block truncate text-[11px] text-zinc-500">{sub}</span>}
       </span>
       {right}
     </button>

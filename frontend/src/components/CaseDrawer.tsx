@@ -34,7 +34,7 @@ export function CaseDrawer({
             <span className="text-[13px]">Open as page</span>
           </Link>
           <button className={btn.quiet} onClick={onClose} aria-label="Close">
-            <span className="text-xs text-zinc-400">Esc</span>
+            <span className="text-xs text-zinc-500">Esc</span>
             <Icon name="close" />
           </button>
         </div>

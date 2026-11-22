@@ -33,7 +33,7 @@ export function DecisionRow({
   return (
     <Card className="animate-fade">
       <div className="px-5 pb-3.5 pt-4">
-        <div className="flex items-center gap-2 text-xs text-zinc-400">
+        <div className="flex items-center gap-2 text-xs text-zinc-500">
           {escalated ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2 py-0.5 font-medium text-red-700">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
@@ -51,8 +51,8 @@ export function DecisionRow({
           {humanize(ex?.headline || c.title)}
         </h3>
         {rec && (
-          <p className="mt-1 flex items-center gap-1.5 text-[13px] text-zinc-500">
-            <Icon name="spark" className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+          <p className="mt-1 flex items-center gap-1.5 text-[13px] text-zinc-600">
+            <Icon name="spark" className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
             <span className="truncate">
               Proposed fix: <span className="text-zinc-800">{humanize(rec.title)}</span>
             </span>
@@ -61,7 +61,7 @@ export function DecisionRow({
         <GoalLine c={c} compact className="mt-2.5" />
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 px-5 py-2.5">
-        <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-zinc-500">
+        <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-zinc-600">
           {policy || "Aurora found no approval rule for this; anyone on the launch team can sign off."}
         </p>
         <div className="flex shrink-0 items-center gap-1.5">
@@ -97,7 +97,7 @@ export function DecideRow({ c, onOpen }: { c: CaseSummary; onOpen: (id: string) 
   return (
     <Card className="animate-fade">
       <div className="px-5 pb-3.5 pt-4">
-        <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-400">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2 py-0.5 font-medium text-amber-800">
             <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             Needs your judgement
@@ -108,12 +108,12 @@ export function DecideRow({ c, onOpen }: { c: CaseSummary; onOpen: (id: string) 
         {inv ? (
           <p className="mt-1.5 line-clamp-2 text-[13px] leading-snug text-zinc-600">{firstSentence(inv.summary)}</p>
         ) : details ? (
-          <p className="mt-1.5 flex items-center gap-2 text-[13px] text-zinc-400">
+          <p className="mt-1.5 flex items-center gap-2 text-[13px] text-zinc-500">
             <Pulse tone="amber" /> Investigator is looking into this…
           </p>
         ) : null}
         {inv?.recommendation && !open && (
-          <p className="mt-1.5 line-clamp-2 text-[13px] leading-snug text-zinc-500">
+          <p className="mt-1.5 line-clamp-2 text-[13px] leading-snug text-zinc-600">
             <span className="font-medium text-zinc-700">Investigator recommends:</span> {firstSentence(inv.recommendation)}
           </p>
         )}
@@ -128,7 +128,7 @@ export function DecideRow({ c, onOpen }: { c: CaseSummary; onOpen: (id: string) 
         )}
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 px-5 py-2.5">
-        <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-zinc-500">
+        <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-zinc-600">
           Your call. Save it as a playbook and Aurora handles the next one the same way.
         </p>
         <div className="flex shrink-0 items-center gap-1.5">
@@ -151,12 +151,12 @@ export function AskRow({ c, name, onOpen, first }: { c: CaseSummary; name: strin
   const chain = chainOf(c);
   return (
     <li className={cx("flex items-start gap-3 px-5 py-3", !first && "border-t border-zinc-100")}>
-      <Icon name="mail" className="mt-1 h-3.5 w-3.5 shrink-0 text-zinc-400" />
+      <Icon name="mail" className="mt-1 h-3.5 w-3.5 shrink-0 text-zinc-500" />
       <div className="min-w-0 flex-1">
         <p className="text-[14px] leading-snug text-zinc-800">{humanize(c.explanation?.headline || c.title)}</p>
         {c.supplier_intent && (
-          <p className="mt-0.5 line-clamp-1 text-[12.5px] text-zinc-500">
-            <span className="text-zinc-400">Would ask:</span> {c.supplier_intent}
+          <p className="mt-0.5 line-clamp-1 text-[12.5px] text-zinc-600">
+            <span className="text-zinc-500">Would ask:</span> {c.supplier_intent}
           </p>
         )}
       </div>

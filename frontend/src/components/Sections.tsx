@@ -22,7 +22,7 @@ export function Judgement({ cases, onOpen }: { cases: CaseSummary[]; onOpen: (id
         <SectionTitle count={cases.length} accent>
           Needs your judgement
         </SectionTitle>
-        <p className="mt-1 text-xs text-zinc-400">New problems the agents found that no playbook covers yet.</p>
+        <p className="mt-1 text-xs text-zinc-500">New problems the agents found that no playbook covers yet.</p>
       </div>
       <ul>
         {cases.map((c) => (
@@ -48,11 +48,11 @@ function ReviewItem({ c, onOpen }: { c: CaseSummary; onOpen: (id: string) => voi
           >
             {c.title}
           </button>
-          <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-zinc-500" title={c.summary}>
+          <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-zinc-600" title={c.summary}>
             {c.summary}
           </p>
           <div className="mt-2 flex items-center justify-between gap-2">
-            <span className="text-xs text-zinc-400">
+            <span className="text-xs text-zinc-500">
               {c.affects_deadline ? "Could affect Sunday" : "After launch · no effect on Sunday"}
             </span>
             {!open && (
@@ -125,7 +125,7 @@ export function DecideForm({
       }}
     >
       <label className="block">
-        {initialText && <span className="mb-1 block text-xs text-zinc-500">Your decision (prefilled with the Investigator’s recommendation, edit freely)</span>}
+        {initialText && <span className="mb-1 block text-xs text-zinc-600">Your decision (prefilled with the Investigator’s recommendation, edit freely)</span>}
         <textarea
           autoFocus={!!onCancel}
           value={text}
@@ -167,7 +167,7 @@ export function DecideForm({
             <ol className="mt-2 space-y-1">
               {playbook.steps.map((st, i) => (
                 <li key={i} className="flex gap-2 text-xs leading-snug text-zinc-600">
-                  <span className="tnum w-4 shrink-0 text-right text-zinc-400">{i + 1}.</span>
+                  <span className="tnum w-4 shrink-0 text-right text-zinc-500">{i + 1}.</span>
                   {st}
                 </li>
               ))}
@@ -214,7 +214,7 @@ export function InFlight({ cases, onOpen }: { cases: CaseSummary[]; onOpen: (id:
         <SectionTitle count={cases.length}>Waiting / in progress</SectionTitle>
       </div>
       {cases.length === 0 ? (
-        <p className="flex items-center gap-2 border-t border-zinc-100 px-4 py-3.5 text-[13px] text-zinc-500">
+        <p className="flex items-center gap-2 border-t border-zinc-100 px-4 py-3.5 text-[13px] text-zinc-600">
           <Pulse />
           Nothing in flight. Approved decisions show up here while agents carry them out.
         </p>
@@ -246,7 +246,7 @@ export function AgentsCanAsk({ cases, onOpen }: { cases: CaseSummary[]; onOpen: 
     <div>
       <div className="px-1 pb-2">
         <SectionTitle count={cases.length}>Agents can ask</SectionTitle>
-        <p className="mt-1 text-xs text-zinc-400">Small gaps an agent can clear with one email. Open one to send.</p>
+        <p className="mt-1 text-xs text-zinc-500">Small gaps an agent can clear with one email. Open one to send.</p>
       </div>
       <ul className="space-y-1">
         {cases.map((c) => (
@@ -255,10 +255,10 @@ export function AgentsCanAsk({ cases, onOpen }: { cases: CaseSummary[]; onOpen: 
               onClick={() => onOpen(c.id)}
               className="group flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left transition hover:bg-white hover:ring-1 hover:ring-zinc-200"
             >
-              <Icon name="mail" className="mt-0.5 h-3.5 w-3.5 text-zinc-400" />
+              <Icon name="mail" className="mt-0.5 h-3.5 w-3.5 text-zinc-500" />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[13px] text-zinc-700">{c.title}</span>
-                <span className="block truncate text-xs text-zinc-400">{c.summary}</span>
+                <span className="block truncate text-xs text-zinc-500">{c.summary}</span>
               </span>
               <Icon name="chevron" className="mt-0.5 h-3.5 w-3.5 text-zinc-300 transition group-hover:text-zinc-500" />
             </button>
@@ -282,14 +282,14 @@ export function RulesInForce({ rules, bare }: { rules: Rule[]; bare?: boolean })
       <ul className="space-y-2.5">
         {ranked.map((r, i) => (
           <li key={i} className="flex items-start gap-2.5">
-            <Icon name="shield" className="mt-0.5 h-3.5 w-3.5 text-zinc-400" />
+            <Icon name="shield" className="mt-0.5 h-3.5 w-3.5 text-zinc-500" />
             <span className="min-w-0 text-[13px] leading-snug text-zinc-700">
               {r.text}{" "}
               <a
                 href={fileUrl(resolvePath(r.source))}
                 target="_blank"
                 rel="noreferrer"
-                className="whitespace-nowrap text-xs text-zinc-400 underline-offset-2 hover:text-zinc-700 hover:underline"
+                className="whitespace-nowrap text-xs text-zinc-500 underline-offset-2 hover:text-zinc-700 hover:underline"
               >
                 {/policy|pp-07/i.test(r.source) ? "Approval policy" : /memo/i.test(r.source) ? "Launch memo" : prettyName(r.source)}
               </a>
@@ -321,7 +321,7 @@ export function RulesInForce({ rules, bare }: { rules: Rule[]; bare?: boolean })
             key={i}
             tip={
               <>
-                “{r.text}”<span className="mt-1 block text-zinc-400">Source: {prettyName(r.source)}</span>
+                “{r.text}”<span className="mt-1 block text-zinc-500">Source: {prettyName(r.source)}</span>
               </>
             }
           >
@@ -331,7 +331,7 @@ export function RulesInForce({ rules, bare }: { rules: Rule[]; bare?: boolean })
               rel="noreferrer"
               className="inline-flex max-w-[300px] items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-xs text-zinc-700 ring-1 ring-inset ring-zinc-200 transition hover:ring-zinc-400"
             >
-              <Icon name="shield" className="h-3 w-3 text-zinc-400" />
+              <Icon name="shield" className="h-3 w-3 text-zinc-500" />
               <span className="truncate">{r.text.replace(/\.$/, "")}</span>
             </a>
           </Tip>
@@ -353,13 +353,13 @@ export function CorrectionsList({ items, parts }: { items: Correction[]; parts: 
             <span
               className={cx(
                 "tnum shrink-0 text-[13px] font-medium",
-                c.qty < 0 ? "text-red-600" : c.qty > 0 ? "text-emerald-700" : "text-zinc-400",
+                c.qty < 0 ? "text-red-600" : c.qty > 0 ? "text-emerald-700" : "text-zinc-500",
               )}
             >
               {c.qty === 0 ? "held for review" : c.qty < 0 ? `ERP had ${num(-c.qty)} too many` : `ERP had ${num(c.qty)} too few`}
             </span>
           </div>
-          <p className="mt-0.5 text-xs text-zinc-500">
+          <p className="mt-0.5 text-xs text-zinc-600">
             <span className="text-zinc-700">{CORRECTION_KIND[c.kind] || c.kind.replace(/_/g, " ")}</span> · {c.reason}
           </p>
           {c.evidence.length > 0 && (
@@ -368,7 +368,7 @@ export function CorrectionsList({ items, parts }: { items: Correction[]; parts: 
                 const item = classify(e);
                 return item.kind === "quote" ? (
                   <Tip key={j} tip={item.text}>
-                    <span className="cursor-default text-xs italic text-zinc-400">“{item.text.slice(0, 48)}…”</span>
+                    <span className="cursor-default text-xs italic text-zinc-500">“{item.text.slice(0, 48)}…”</span>
                   </Tip>
                 ) : (
                   <EvidenceLink key={j} raw={e} />
@@ -395,13 +395,13 @@ export function Corrections({ items, parts }: { items: Correction[]; parts: Reco
         <div>
           <p className="flex items-center gap-2 text-[15px] font-semibold text-zinc-900">
             What we corrected in the ERP, and why
-            <span className="tnum text-[13px] font-normal text-zinc-400">{items.length}</span>
+            <span className="tnum text-[13px] font-normal text-zinc-500">{items.length}</span>
           </p>
-          <p className="mt-0.5 text-[13px] text-zinc-500">
+          <p className="mt-0.5 text-[13px] text-zinc-600">
             {applied.length} stock figures replaced by what the paperwork says; the rest held for review.
           </p>
         </div>
-        <Icon name="chevron" className={cx("h-4 w-4 text-zinc-400 transition", open && "rotate-90")} />
+        <Icon name="chevron" className={cx("h-4 w-4 text-zinc-500 transition", open && "rotate-90")} />
       </button>
       {open && <CorrectionsList items={items} parts={parts} />}
     </Card>

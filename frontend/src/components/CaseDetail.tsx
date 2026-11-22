@@ -26,13 +26,13 @@ export function CaseDetailView({
 
   if (error && !data)
     return (
-      <div className="p-8 text-sm text-zinc-500">
+      <div className="p-8 text-sm text-zinc-600">
         Couldn’t load case {id}. {String(error.message || error)}
       </div>
     );
   if (isLoading || !data)
     return (
-      <div className="flex items-center gap-2 p-8 text-sm text-zinc-500">
+      <div className="flex items-center gap-2 p-8 text-sm text-zinc-600">
         <Spinner /> Gathering the evidence for {id}…
       </div>
     );
@@ -94,7 +94,7 @@ function Body({ c, names, layout }: { c: Detail; names: Record<string, string>; 
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-zinc-400">No supplier emails on this case.</p>
+            <p className="text-[13px] text-zinc-500">No supplier emails on this case.</p>
           )}
         </Section>
       )}
@@ -117,7 +117,7 @@ function Body({ c, names, layout }: { c: Detail; names: Record<string, string>; 
       ) : (
         <>
           {c.status === "AWAITING_HUMAN_REVIEW" && (
-            <p className="mx-6 mt-5 flex items-center gap-2 text-[13px] text-zinc-500">
+            <p className="mx-6 mt-5 flex items-center gap-2 text-[13px] text-zinc-600">
               <Pulse tone="amber" /> Investigator is looking into this: checking the plan, documents and who approves…
             </p>
           )}
@@ -157,7 +157,7 @@ function Body({ c, names, layout }: { c: Detail; names: Record<string, string>; 
                   {findings.map((f, i) => (
                     <li key={i} className="rounded-lg bg-zinc-50 px-3 py-2 ring-1 ring-inset ring-zinc-200">
                       <p className="text-[13px] text-zinc-800">{f.title}</p>
-                      <p className="mt-0.5 text-xs italic text-zinc-500">“{f.raw}”</p>
+                      <p className="mt-0.5 text-xs italic text-zinc-600">“{f.raw}”</p>
                       <div className="mt-1.5">
                         <EvidenceLink raw={f.source} />
                       </div>
@@ -247,13 +247,13 @@ function Tracker({ c }: { c: Detail }) {
             <p
               className={cx(
                 "mt-2 flex items-center gap-1.5 text-[13px]",
-                done ? "text-emerald-700" : current ? "font-medium text-zinc-900" : "text-zinc-400",
+                done ? "text-emerald-700" : current ? "font-medium text-zinc-900" : "text-zinc-500",
               )}
             >
               {done ? <Icon name="check" className="h-3.5 w-3.5" /> : current ? <Pulse /> : null}
               {s.label}
             </p>
-            <p className={cx("tnum mt-0.5 text-xs", i <= idx ? "text-zinc-500" : "text-zinc-300")}>{sub[i]}</p>
+            <p className={cx("tnum mt-0.5 text-xs", i <= idx ? "text-zinc-600" : "text-zinc-400")}>{sub[i]}</p>
           </li>
         );
       })}
@@ -273,7 +273,7 @@ function ApproverList({ chain }: { chain: NonNullable<Detail["approver"]> }) {
               <div className="min-w-0">
                 <p className="text-sm text-zinc-900">
                   <span className="font-medium">{a.person || "Unassigned"}</span>
-                  <span className="text-zinc-500"> · {a.role}</span>
+                  <span className="text-zinc-600"> · {a.role}</span>
                 </p>
                 {a.fallback_for && (
                   <p className="text-xs text-amber-700">
@@ -281,7 +281,7 @@ function ApproverList({ chain }: { chain: NonNullable<Detail["approver"]> }) {
                     {a.fallback_for}
                   </p>
                 )}
-                <p className="text-xs text-zinc-500">{a.reason}</p>
+                <p className="text-xs text-zinc-600">{a.reason}</p>
               </div>
             </li>
           );
@@ -290,7 +290,7 @@ function ApproverList({ chain }: { chain: NonNullable<Detail["approver"]> }) {
       {chain.notes.length > 0 && (
         <ul className="mt-3 space-y-1 border-t border-zinc-100 pt-2.5">
           {chain.notes.map((n) => (
-            <li key={n} className="text-xs text-zinc-500">
+            <li key={n} className="text-xs text-zinc-600">
               {n}
             </li>
           ))}
@@ -303,7 +303,7 @@ function ApproverList({ chain }: { chain: NonNullable<Detail["approver"]> }) {
 function Head({ c }: { c: Detail }) {
   return (
     <div className="px-6 pt-6">
-      <div className="flex items-center gap-2 text-xs text-zinc-400">
+      <div className="flex items-center gap-2 text-xs text-zinc-500">
         <StatusPill status={c.status} />
         {c.playbook_title && <span>{c.playbook_title}</span>}
       </div>
@@ -311,8 +311,8 @@ function Head({ c }: { c: Detail }) {
         {humanize(c.explanation?.headline || c.title)}
       </h1>
       {c.recommendation && (
-        <p className="mt-2 flex items-center gap-1.5 text-[14px] text-zinc-500">
-          <Icon name="spark" className="h-3.5 w-3.5 text-zinc-400" />
+        <p className="mt-2 flex items-center gap-1.5 text-[14px] text-zinc-600">
+          <Icon name="spark" className="h-3.5 w-3.5 text-zinc-500" />
           Proposed fix: <span className="text-zinc-800">{humanize(c.recommendation.title)}</span>
         </p>
       )}
@@ -387,7 +387,7 @@ function ActionBar({
         <p className="text-[13px] font-medium text-zinc-900">
           {d.investigation ? "Your call. What should happen?" : "No playbook covers this yet. What should happen?"}
         </p>
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-zinc-600">
           {(d.investigation?.affects_deadline ?? c.affects_deadline)
             ? "It could affect Sunday’s launch."
             : "It does not affect Sunday’s launch."}{" "}
@@ -453,7 +453,7 @@ function OptionsTable({
             onClick={selectable ? () => onSelect!(o.id) : undefined}
             className={cx(
               "px-3 py-2.5",
-              !o.feasible && "text-zinc-400",
+              !o.feasible && "text-zinc-500",
               selectable && "cursor-pointer hover:bg-zinc-50",
               isSel && selectable && "bg-zinc-50 ring-1 ring-inset ring-zinc-300",
             )}
@@ -467,11 +467,11 @@ function OptionsTable({
                 <span className="w-3" />
               )}
               <span className={cx(o.feasible ? "text-zinc-800" : "line-through")}>{o.title}</span>
-              {isRec && <span className="ml-auto shrink-0 text-[11px] text-zinc-400">Recommended</span>}
+              {isRec && <span className="ml-auto shrink-0 text-[11px] text-zinc-500">Recommended</span>}
             </div>
             <dl className="tnum mt-2 grid grid-cols-3 gap-3 pl-[18px] text-[13px]">
               <div>
-                <dt className="text-[10px] uppercase tracking-wide text-zinc-400">Gain</dt>
+                <dt className="text-[10px] uppercase tracking-wide text-zinc-500">Gain</dt>
                 <dd>
                   {g.up.map((x) => (
                     <div key={x.product} className="font-medium text-emerald-700">
@@ -479,25 +479,25 @@ function OptionsTable({
                     </div>
                   ))}
                   {g.down.map((x) => (
-                    <div key={x.product} className="text-xs text-zinc-400">
+                    <div key={x.product} className="text-xs text-zinc-500">
                       {num(x.qty)} {x.name}
                     </div>
                   ))}
-                  {!g.up.length && !g.down.length && <span className="text-zinc-400">–</span>}
+                  {!g.up.length && !g.down.length && <span className="text-zinc-500">–</span>}
                 </dd>
               </div>
               <div>
-                <dt className="text-[10px] uppercase tracking-wide text-zinc-400">Cost</dt>
+                <dt className="text-[10px] uppercase tracking-wide text-zinc-500">Cost</dt>
                 <dd className="text-zinc-900">
                   {eur(o.cost_eur)}
-                  {o.cost_note && <div className="text-[11px] text-zinc-400">{o.cost_note}</div>}
+                  {o.cost_note && <div className="text-[11px] text-zinc-500">{o.cost_note}</div>}
                 </dd>
               </div>
               <div>
-                <dt className="text-[10px] uppercase tracking-wide text-zinc-400">Ready / needed by</dt>
+                <dt className="text-[10px] uppercase tracking-wide text-zinc-500">Ready / needed by</dt>
                 <dd className="text-zinc-900">
                   {when(o.arrival_at)}
-                  <span className="text-zinc-400"> / {when(o.last_useful_moment)}</span>
+                  <span className="text-zinc-500"> / {when(o.last_useful_moment)}</span>
                   {spare !== null && (
                     <div className={cx("text-[11px]", spare >= 0 ? "text-emerald-700" : "text-red-600")}>
                       {spare >= 0 ? `${duration(spare)} to spare` : `${duration(-spare)} too late`}
@@ -532,7 +532,7 @@ const ACTOR: Record<string, { icon: IconName; label: string }> = {
 function Timeline({ events, status }: { events: Detail["events"]; status: CaseStatus }) {
   if (!events.length)
     return (
-      <p className="flex items-center gap-2 text-[13px] text-zinc-400">
+      <p className="flex items-center gap-2 text-[13px] text-zinc-500">
         <Pulse />
         {status === "AWAITING_APPROVAL" || status === "READY_TO_ASK"
           ? "Found and priced by the agents. Nothing has been sent yet."
@@ -549,7 +549,7 @@ function Timeline({ events, status }: { events: Detail["events"]; status: CaseSt
             <span
               className={cx(
                 "relative z-10 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white ring-1",
-                e.actor === "human" ? "text-zinc-900 ring-zinc-400" : "text-zinc-500 ring-zinc-200",
+                e.actor === "human" ? "text-zinc-900 ring-zinc-400" : "text-zinc-600 ring-zinc-200",
               )}
             >
               <Icon name={a.icon} className="h-3.5 w-3.5" />
@@ -565,7 +565,7 @@ function Timeline({ events, status }: { events: Detail["events"]; status: CaseSt
                   e.text
                 )}
               </p>
-              <p className="tnum text-[11px] text-zinc-400">
+              <p className="tnum text-[11px] text-zinc-500">
                 {a.label} · {when(e.at)}
               </p>
             </div>
@@ -607,7 +607,7 @@ function Email({ m }: { m: CaseMessage }) {
                   onClick={() => setLang(l)}
                   className={cx(
                     "rounded px-1.5 py-0.5 transition",
-                    lang === l ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500",
+                    lang === l ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-600",
                   )}
                 >
                   {l === "orig" ? "Original" : "English"}
@@ -615,7 +615,7 @@ function Email({ m }: { m: CaseMessage }) {
               ))}
             </div>
           )}
-          <span className="tnum text-[11px] text-zinc-400">{clock(m.at)}</span>
+          <span className="tnum text-[11px] text-zinc-500">{clock(m.at)}</span>
         </div>
       </header>
       <pre className="max-h-64 overflow-auto whitespace-pre-wrap px-3 py-2.5 font-sans text-[13px] leading-relaxed text-zinc-700">
@@ -629,7 +629,7 @@ function Autonomy({ c }: { c: Detail }) {
   const a = c.autonomy;
   if (!a?.playbook_id) return null;
   return (
-    <p className="tnum mx-6 mt-6 border-t border-zinc-100 pt-3 text-xs text-zinc-400">
+    <p className="tnum mx-6 mt-6 border-t border-zinc-100 pt-3 text-xs text-zinc-500">
       Playbook “{c.playbook_title || a.playbook_id}”: approved {a.approvals}× ({a.approvals_without_edit} without
       changes).{" "}
       {a.auto_enabled ? (
@@ -654,10 +654,10 @@ function Section({
 }) {
   return (
     <section className="mt-7">
-      <h3 className="mb-2.5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
-        <Icon name={icon} className="h-3.5 w-3.5 text-zinc-400" />
+      <h3 className="mb-2.5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-600">
+        <Icon name={icon} className="h-3.5 w-3.5 text-zinc-500" />
         {title}
-        {hint && <span className="font-normal normal-case tracking-normal text-zinc-400">· {hint}</span>}
+        {hint && <span className="font-normal normal-case tracking-normal text-zinc-500">· {hint}</span>}
       </h3>
       {children}
     </section>

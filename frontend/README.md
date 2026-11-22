@@ -10,7 +10,7 @@ Next.js (App Router) + TypeScript + Tailwind. Soony-branded (Soony blue primary,
   Approve (compact decision rows with a goal line and one "Approve as …" button), Decide (Investigator summary +
   decision form), Agents handle alone ("Let the agent ask"), Agents working for you, Done & watching.
 - **AI team** (`/team`): the goal every agent serves, the process strip, one card per specialised agent grouped by
-  process step (Lio equivalent, trigger, what it does alone, activity, its cases), and the autonomy ladder.
+  process step (trigger, what it does alone, activity, its cases), and the autonomy ladder.
 - **Setup** (`/setup`): goal first, then rules, autonomy, data, sources; "n of 5 confirmed".
 
 Case details open in a drawer, or as a page at `/cases/<id>`; dense data sits behind "Details".

@@ -78,7 +78,7 @@ function Loading() {
           ))}
         </div>
       </Card>
-      <Card className="flex items-center gap-3 px-6 py-8 text-[15px] text-zinc-500">
+      <Card className="flex items-center gap-3 px-6 py-8 text-[15px] text-zinc-600">
         <Pulse tone="amber" />
         Agents are reading delivery notes, order confirmations and the ERP, and pricing every gap against Sunday 20:00…
       </Card>
@@ -90,7 +90,7 @@ function Offline() {
   return (
     <Card className="mx-auto mt-16 max-w-lg px-6 py-8 text-center">
       <p className="text-sm font-medium text-zinc-900">Can’t reach the agents</p>
-      <p className="mt-1 text-[13px] text-zinc-500">
+      <p className="mt-1 text-[13px] text-zinc-600">
         Aurora’s backend isn’t answering at <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs">{API_URL}</code>.
         Start it, or set <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs">NEXT_PUBLIC_API_URL</code>. This page
         retries every 5 seconds.

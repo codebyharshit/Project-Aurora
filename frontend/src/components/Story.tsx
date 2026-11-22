@@ -45,7 +45,7 @@ export function Facts({ facts, max = 3 }: { facts: ExplanationFact[]; max?: numb
               <Compare label={paperLabel(f.source)} value={f.truth} strong />
             </div>
           ) : null}
-          <p className={cx("text-[14px] leading-relaxed", f.system != null ? "mt-1 text-zinc-500" : "text-zinc-700")}>
+          <p className={cx("text-[14px] leading-relaxed", f.system != null ? "mt-1 text-zinc-600" : "text-zinc-700")}>
             {humanize(f.text)}
           </p>
           <SourceChip source={f.source} className="mt-1.5" />
@@ -58,8 +58,8 @@ export function Facts({ facts, max = 3 }: { facts: ExplanationFact[]; max?: numb
 function Compare({ label, value, strong }: { label: string; value: number; strong?: boolean }) {
   return (
     <span className="inline-flex items-baseline gap-1.5">
-      <span className="text-xs text-zinc-500">{label}</span>
-      <span className={cx("tnum text-lg font-semibold", strong ? "text-zinc-900" : "text-zinc-400 line-through decoration-zinc-300")}>
+      <span className="text-xs text-zinc-600">{label}</span>
+      <span className={cx("tnum text-lg font-semibold", strong ? "text-zinc-900" : "text-zinc-500 line-through decoration-zinc-300")}>
         {num(value)}
       </span>
     </span>
@@ -84,7 +84,7 @@ export function SourceChip({ source, className }: { source: string; className?: 
   if (item.kind === "quote") return null;
   if (item.kind === "ref")
     return (
-      <span className={cx("inline-flex items-center gap-1 text-xs text-zinc-400", className)}>
+      <span className={cx("inline-flex items-center gap-1 text-xs text-zinc-500", className)}>
         <Icon name="doc" className="h-3 w-3" />
         {item.label}
       </span>
@@ -99,7 +99,7 @@ export function SourceChip({ source, className }: { source: string; className?: 
         )}
         title="Open the document"
       >
-        <Icon name={item.kind === "image" ? "image" : "doc"} className="h-3 w-3 text-zinc-400" />
+        <Icon name={item.kind === "image" ? "image" : "doc"} className="h-3 w-3 text-zinc-500" />
         <span className="truncate">{sourceTitle(item.path)}</span>
       </button>
       {open && <Viewer path={item.path} url={item.url} kind={item.kind} onClose={() => setOpen(false)} />}
@@ -137,7 +137,7 @@ function Viewer({
       <div className="relative flex max-h-full w-full max-w-4xl animate-pop flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
         <div className="flex items-center justify-between gap-3 border-b border-zinc-100 px-4 py-2.5">
           <span className="truncate text-sm text-zinc-700">{prettyName(path)}</span>
-          <span className="flex shrink-0 items-center gap-3 text-xs text-zinc-500">
+          <span className="flex shrink-0 items-center gap-3 text-xs text-zinc-600">
             <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-zinc-900">
               Open in new tab <Icon name="external" className="h-3 w-3" />
             </a>
@@ -192,7 +192,7 @@ export function Benefit({ c }: { c: CaseSummary }) {
         </Tip>
       </p>
       {rec?.arrival_at && (
-        <p className={cx("mt-1.5 text-[13px]", b.partial || (late !== null && late > 0) ? "text-amber-700" : "text-zinc-500")}>
+        <p className={cx("mt-1.5 text-[13px]", b.partial || (late !== null && late > 0) ? "text-amber-700" : "text-zinc-600")}>
           {late !== null && late > 0 ? (
             <>
               Arrives {when(rec.arrival_at)}, {duration(late)} after the ideal time
@@ -213,7 +213,7 @@ export function Benefit({ c }: { c: CaseSummary }) {
         </p>
       )}
       {down.length > 0 && (
-        <p className="mt-1.5 text-[13px] text-zinc-400">
+        <p className="mt-1.5 text-[13px] text-zinc-500">
           {down.map((x) => `${num(-x.qty)} ${x.name}`).join(", ")} copies wait for later: shared parts go to{" "}
           {up[0]?.name || "the priority edition"} first.
         </p>
@@ -225,7 +225,7 @@ export function Benefit({ c }: { c: CaseSummary }) {
 export function IfNot({ c }: { c: CaseSummary }) {
   const n = c.explanation?.if_not;
   if (!n)
-    return <p className="text-[14px] text-zinc-500">No direct effect on Sunday’s numbers, but the records stay wrong.</p>;
+    return <p className="text-[14px] text-zinc-600">No direct effect on Sunday’s numbers, but the records stay wrong.</p>;
   const list = editionList(n.copies);
   return (
     <p className="tnum text-[14px] leading-relaxed text-zinc-700">
@@ -240,7 +240,7 @@ export function IfNot({ c }: { c: CaseSummary }) {
         <>
           {" "}
           <Tip tip={ESTIMATE_NOTE}>
-            <span className="cursor-help text-zinc-500 underline decoration-zinc-300 decoration-dotted underline-offset-4">
+            <span className="cursor-help text-zinc-600 underline decoration-zinc-300 decoration-dotted underline-offset-4">
               (about {eur(n.eur_at_risk)} at risk)
             </span>
           </Tip>
@@ -259,7 +259,7 @@ export function NextSteps({ steps }: { steps: string[] }) {
     <ol className="space-y-2">
       {steps.map((s, i) => (
         <li key={i} className="flex items-start gap-2.5 text-[14px] leading-snug text-zinc-700">
-          <span className="tnum mt-px inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-[11px] font-medium text-zinc-500">
+          <span className="tnum mt-px inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-[11px] font-medium text-zinc-600">
             {i + 1}
           </span>
           {s}

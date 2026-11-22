@@ -12,9 +12,9 @@ export function ListHead({ title, sub, count }: { title: string; sub: string; co
     <div className="px-5 pb-3 pt-4">
       <p className="flex items-center gap-2 text-[15px] font-semibold text-zinc-900">
         {title}
-        {count !== undefined && <span className="tnum text-[13px] font-normal text-zinc-400">{count}</span>}
+        {count !== undefined && <span className="tnum text-[13px] font-normal text-zinc-500">{count}</span>}
       </p>
-      <p className="mt-0.5 text-[13px] text-zinc-500">{sub}</p>
+      <p className="mt-0.5 text-[13px] text-zinc-600">{sub}</p>
     </div>
   );
 }
@@ -37,7 +37,7 @@ export function Collapsible({
         <div className="flex-1">
           <ListHead title={title} sub={sub} count={count} />
         </div>
-        <Icon name="chevron" className={cx("mr-5 h-4 w-4 text-zinc-400 transition", open && "rotate-90")} />
+        <Icon name="chevron" className={cx("mr-5 h-4 w-4 text-zinc-500 transition", open && "rotate-90")} />
       </button>
       {open && <div className="animate-fade">{children}</div>}
     </Card>
@@ -100,10 +100,10 @@ export function FlightRow({ c, onOpen }: { c: CaseSummary; onOpen: (id: string) 
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-[14px] text-zinc-800">{humanize(c.recommendation?.title || c.title)}</span>
-          <span className={cx("mt-0.5 block text-xs", c.status === "DELIVERED" ? "text-emerald-700" : "text-zinc-500")}>
+          <span className={cx("mt-0.5 block text-xs", c.status === "DELIVERED" ? "text-emerald-700" : "text-zinc-600")}>
             {line}
-            {approvedBy && <span className="text-zinc-400"> · approved by {approvedBy}</span>}
-            {last && !eta && <span className="text-zinc-400"> · {when(last.at)}</span>}
+            {approvedBy && <span className="text-zinc-500"> · approved by {approvedBy}</span>}
+            {last && !eta && <span className="text-zinc-500"> · {when(last.at)}</span>}
           </span>
         </span>
         <Icon name="chevron" className="mt-1 h-3.5 w-3.5 text-zinc-300 group-hover:text-zinc-600" />

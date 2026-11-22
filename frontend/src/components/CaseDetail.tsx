@@ -311,9 +311,9 @@ function Head({ c }: { c: Detail }) {
         {humanize(c.explanation?.headline || c.title)}
       </h1>
       {c.recommendation && (
-        <p className="mt-2 flex items-center gap-1.5 text-[14px] text-zinc-600">
-          <Icon name="spark" className="h-3.5 w-3.5 text-zinc-500" />
-          Proposed fix: <span className="text-zinc-800">{humanize(c.recommendation.title)}</span>
+        <p className="mt-2 flex items-start gap-1.5 text-[14px] text-zinc-600">
+          <Icon name="spark" className="mt-1 h-3.5 w-3.5 shrink-0 text-zinc-500" />
+          <span>Proposed fix: <span className="text-zinc-800">{humanize(c.recommendation.title)}</span></span>
         </p>
       )}
       <GoalLine c={c} className="mt-3" />
@@ -334,7 +334,7 @@ function ActionBar({
   if (c.status === "AWAITING_APPROVAL" || c.status === "ESCALATED") {
     const first = chain?.approvers?.[0];
     return (
-      <div className="mx-6 mt-5 flex items-center justify-between gap-4 rounded-xl bg-amber-50/60 px-4 py-3 ring-1 ring-inset ring-amber-200/70">
+      <div className="mx-6 mt-5 flex flex-col items-stretch justify-between gap-3 rounded-xl sm:flex-row sm:items-center sm:gap-4 bg-amber-50/60 px-4 py-3 ring-1 ring-inset ring-amber-200/70">
         <p className="min-w-0 text-[13px] leading-snug text-zinc-600">
           {c.status === "ESCALATED" ? (
             <>
@@ -358,7 +358,7 @@ function ActionBar({
   }
   if (c.status === "READY_TO_ASK") {
     return (
-      <div className="mx-6 mt-5 flex items-center justify-between gap-4 rounded-xl bg-zinc-50 px-4 py-3 ring-1 ring-inset ring-zinc-200">
+      <div className="mx-6 mt-5 flex flex-col items-stretch justify-between gap-3 rounded-xl sm:flex-row sm:items-center sm:gap-4 bg-zinc-50 px-4 py-3 ring-1 ring-inset ring-zinc-200">
         <p className="min-w-0 text-[13px] leading-snug text-zinc-700">
           {d.supplier_intent ? (
             <>

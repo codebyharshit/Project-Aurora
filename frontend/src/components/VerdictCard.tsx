@@ -112,7 +112,7 @@ export function VerdictCard({
         </p>
       </div>
 
-      <div className="grid grid-cols-3 divide-x divide-zinc-100 border-t border-zinc-100">
+      <div className="grid grid-cols-1 divide-y divide-zinc-100 border-t border-zinc-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {ordered.map((t) => (
           <PctTile key={t.id} t={t} />
         ))}

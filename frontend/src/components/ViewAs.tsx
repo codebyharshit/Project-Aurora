@@ -49,8 +49,8 @@ export function ViewAs({ counts }: { counts?: Record<string, number> }) {
             <Icon name="people" className="h-3 w-3" />
           </span>
         )}
-        <span className="max-w-[150px] truncate">
-          <span className="text-zinc-500">View as </span>
+        <span className="max-w-[90px] truncate sm:max-w-[150px]">
+          <span className="hidden text-zinc-500 sm:inline">View as </span>
           <span className="font-medium text-zinc-900">{who || "Everyone"}</span>
         </span>
         <Icon name="chevron" className={cx("h-3.5 w-3.5 text-zinc-500 transition", open ? "-rotate-90" : "rotate-90")} />
@@ -59,7 +59,7 @@ export function ViewAs({ counts }: { counts?: Record<string, number> }) {
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 top-full z-50 mt-2 w-[340px] animate-pop overflow-hidden rounded-xl bg-white p-1.5 shadow-[0_12px_40px_-8px_rgba(24,24,27,0.25)] ring-1 ring-zinc-200"
+          className="absolute right-0 top-full z-50 mt-2 w-[min(340px,calc(100vw-2rem))] animate-pop overflow-hidden rounded-xl bg-white p-1.5 shadow-[0_12px_40px_-8px_rgba(24,24,27,0.25)] ring-1 ring-zinc-200"
         >
           <Row
             selected={!who}

@@ -113,13 +113,14 @@ export function Tip({
   below?: boolean;
 }) {
   return (
-    <span className={cx("group/tip relative inline-flex", className)}>
+    <span className={cx("group/tip relative inline-flex max-w-full", className)}>
       {children}
       <span
         role="tooltip"
         className={cx(
-          "pointer-events-none absolute left-0 z-40 w-max max-w-[320px] rounded-lg bg-zinc-900 px-2.5 py-1.5 text-xs leading-snug text-zinc-100 opacity-0 shadow-lg transition group-hover/tip:translate-y-0 group-hover/tip:opacity-100",
-          below ? "top-full mt-2 -translate-y-1" : "bottom-full mb-2 translate-y-1",
+          // Out of layout until hovered: an invisible tip still widens the page on narrow screens.
+          "pointer-events-none absolute left-0 z-40 hidden w-max max-w-[min(320px,calc(100vw-2rem))] rounded-lg bg-zinc-900 px-2.5 py-1.5 text-xs leading-snug text-zinc-100 shadow-lg transition transition-discrete group-hover/tip:block starting:opacity-0",
+          below ? "top-full mt-2 starting:-translate-y-1" : "bottom-full mb-2 starting:translate-y-1",
         )}
       >
         {tip}

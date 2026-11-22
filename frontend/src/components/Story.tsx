@@ -132,7 +132,7 @@ function Viewer({
     return () => document.removeEventListener("keydown", k);
   }, [onClose]);
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6" role="dialog">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6" role="dialog">
       <div className="absolute inset-0 animate-fade bg-zinc-900/50" onClick={onClose} />
       <div className="relative flex max-h-full w-full max-w-4xl animate-pop flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
         <div className="flex items-center justify-between gap-3 border-b border-zinc-100 px-4 py-2.5">

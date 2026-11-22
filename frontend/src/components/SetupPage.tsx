@@ -49,7 +49,7 @@ export function SetupPage() {
             </p>
           </div>
           {data && (
-            <div className="min-w-[180px]">
+            <div className="w-full sm:w-auto sm:min-w-[180px]">
               <p className="tnum text-[13px] text-zinc-600">
                 <span className={cx("font-semibold", progress.confirmed === progress.total ? "text-emerald-700" : "text-zinc-900")}>
                   {progress.confirmed} of {progress.total}
@@ -200,7 +200,7 @@ function SourcesStep({ d, n }: { d: Setup; n: number }) {
     >
       <ul className="grid gap-3 sm:grid-cols-3">
         {d.sections.sources.items.map((s) => (
-          <li key={s.kind} className="rounded-lg p-3.5 ring-1 ring-inset ring-zinc-200">
+          <li key={s.kind} className="min-w-0 rounded-lg p-3.5 ring-1 ring-inset ring-zinc-200">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-[14px] font-medium text-zinc-900">
                 <Icon name={SOURCE_ICON[s.kind] || "doc"} className="text-zinc-500" />

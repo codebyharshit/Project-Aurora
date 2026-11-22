@@ -25,16 +25,16 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
 
   return (
     <header className="sticky top-0 z-30 border-b border-zinc-200/80 bg-white/85 backdrop-blur">
-      <div className="mx-auto grid h-14 max-w-[1240px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-5">
-        <Link href="/" className="flex min-w-0 items-center gap-3">
+      <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2 md:grid md:h-14 md:grid-cols-[1fr_auto_1fr] md:gap-4 md:px-5 md:py-0">
+        <Link href="/" className="flex min-w-0 flex-1 items-center gap-3">
           <SoonyWordmark />
-          <span className="h-4 w-px bg-zinc-200" />
-          <span className="truncate text-[13px] text-zinc-600">
+          <span className="hidden h-4 w-px bg-zinc-200 lg:block" />
+          <span className="hidden truncate text-[13px] text-zinc-600 lg:inline">
             Grand Heist 6 <span className="text-zinc-300">·</span> Launch room
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1 rounded-full bg-zinc-100/80 p-0.5" aria-label="Main">
+        <nav className="order-last flex w-full items-center gap-1 rounded-full bg-zinc-100/80 p-0.5 md:order-none md:w-auto" aria-label="Main">
           {NAV.map((n) => {
             const active = n.href === "/" ? path === "/" || path.startsWith("/cases") : path.startsWith(n.href);
             return (
@@ -43,7 +43,7 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
                 href={n.href}
                 aria-current={active ? "page" : undefined}
                 className={cx(
-                  "rounded-full px-3.5 py-1 text-[13px] transition",
+                  "flex-1 rounded-full px-3.5 py-1 text-center text-[13px] transition md:flex-none",
                   active ? "bg-white font-medium text-soony-blue shadow-sm ring-1 ring-zinc-200/80" : "text-zinc-600 hover:text-zinc-900",
                 )}
               >
@@ -53,8 +53,8 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
           })}
         </nav>
 
-        <div className="flex items-center justify-end gap-2.5">
-          <div className="flex h-8 items-center gap-2 rounded-full bg-white py-1 pl-2.5 pr-3 ring-1 ring-inset ring-zinc-200">
+        <div className="flex shrink-0 items-center justify-end gap-2">
+          <div className="flex h-8 items-center gap-1.5 rounded-full bg-white py-1 pl-2.5 pr-3 ring-1 ring-inset ring-zinc-200 sm:gap-2">
             <Icon name="truck" className={cx("h-4 w-4", urgent ? "text-amber-600" : "text-zinc-600")} />
             {ov ? (
               <Tip
@@ -66,11 +66,11 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
                 }
               >
                 <span className="whitespace-nowrap text-[13px] text-zinc-600">
-                  Trucks leave in{" "}
+                  <span className="hidden sm:inline">Trucks leave in </span>
                   <span className={cx("tnum font-semibold", urgent ? "text-amber-700" : "text-zinc-900")}>
                     {duration(left)}
                   </span>
-                  <span className="text-zinc-500"> · {when(ov.deadline)}</span>
+                  <span className="hidden text-zinc-500 xl:inline"> · {when(ov.deadline)}</span>
                 </span>
               </Tip>
             ) : (
@@ -78,7 +78,9 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
             )}
           </div>
           <ViewAs counts={counts} />
-          <AuroraMark className="ml-1 hidden lg:inline-flex" />
+          <span className="ml-1 hidden lg:inline-flex">
+            <AuroraMark />
+          </span>
         </div>
       </div>
     </header>

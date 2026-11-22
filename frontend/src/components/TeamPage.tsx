@@ -456,7 +456,7 @@ function AutonomyLadder({ agentsData, setup, ov }: { agentsData: AgentsResponse;
         </p>
       </div>
       <Card className="mt-4 p-5">
-        <ol className="grid grid-cols-4 gap-3">
+        <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
           {LADDER.map((tier, i) => {
             const list = playbooks.filter((p) => p.tier === tier);
             return (

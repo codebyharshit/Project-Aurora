@@ -25,13 +25,13 @@ export function ProcessStrip({
   const nameOf = (id: string) => shortAgent(agents.find((a) => a.id === id)?.name || id);
   return (
     <div className={cx("rounded-xl bg-white ring-1 ring-zinc-200/80 shadow-[0_1px_2px_rgba(24,24,27,0.04)]", className)}>
-      <ol className="grid grid-cols-7 divide-x divide-zinc-100">
+      <ol className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-zinc-100 sm:grid-cols-4 lg:grid-cols-7">
         {process.map((s) => {
           const had = hadSystem(s);
           const n = open[s.step] || 0;
           const names = s.agents.map(nameOf);
           return (
-            <li key={s.step} className="min-w-0">
+            <li key={s.step} className="min-w-0 bg-white">
               <Link
                 href={`${linkTo}#step-${s.step}`}
                 className="group block h-full px-3.5 py-3 transition hover:bg-zinc-50/80"

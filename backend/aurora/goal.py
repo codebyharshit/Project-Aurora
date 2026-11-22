@@ -82,9 +82,11 @@ def why_for(tenant: Tenant, data: dict, goal: dict, rules_in_force: list[dict]) 
         p = by_name.get(name, {})
         (serves if copies > 0 else trades).append({"product_id": p.get("product_id"), "name": name, "copies": copies})
     if serves:
-        top = min((by_name.get(s["name"], {"priority": 9}) for s in serves), key=lambda p: p["priority"])
-        label = (f"{top['name'].replace(' Edition', '')} first" if top.get("priority") == 1
-                 else f"{top['name'].replace(' Edition', '')} within {top.get('tolerance_pct', 0):g}%")
+        top = min((by_name.get(s["name"]) or {"name": s["name"], "priority": 9} for s in serves),
+                  key=lambda p: p.get("priority", 9))
+        short = top["name"].replace(" Edition", "")
+        label = (f"{short} first" if top.get("priority") == 1
+                 else f"{short} within {top.get('tolerance_pct', 0):g}%" if "tolerance_pct" in top else f"Serves {short}")
     elif data.get("tier") in ("ask", "observe", "review"):
         label = "Keep the plan true"
     else:

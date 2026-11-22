@@ -88,6 +88,20 @@ def _configured() -> bool:
     return bool(os.environ.get("GMAIL_USER") and os.environ.get("GMAIL_APP_PASSWORD"))
 
 
+def smtp_send(msg: EmailMessage) -> None:
+    """Send through Gmail: STARTTLS on 587, then SSL on 465 (some hosts block one of them)."""
+    user, pw = os.environ["GMAIL_USER"], os.environ["GMAIL_APP_PASSWORD"].replace(" ", "")
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as s:
+            s.starttls()
+            s.login(user, pw)
+            s.send_message(msg)
+    except OSError:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
+            s.login(user, pw)
+            s.send_message(msg)
+
+
 def send_for_case(store: Store, case_id: str, message: dict, approved_by: str,
                   in_reply_to: str | None = None, parsed: dict | None = None) -> dict:
     """The only path that sends email. Requires a human approval recorded on the case."""
@@ -108,10 +122,13 @@ def send_for_case(store: Store, case_id: str, message: dict, approved_by: str,
         msg["In-Reply-To"] = in_reply_to
         msg["References"] = in_reply_to
     msg.set_content(message["body"] + "\n\n---\n" + message["body_en"])
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as s:
-        s.starttls()
-        s.login(os.environ["GMAIL_USER"], os.environ["GMAIL_APP_PASSWORD"].replace(" ", ""))
-        s.send_message(msg)
+    try:
+        smtp_send(msg)
+    except (OSError, smtplib.SMTPException) as e:   # host blocks SMTP or Gmail refuses: keep it in the outbox
+        store.add_message(case_id, "outbox", message["to"], message["subject"], message["body"], message["body_en"],
+                          parsed=parsed)
+        store.event(case_id, "comms", f"Email to {message['supplier']} ready but not sent (mail server unreachable: {e})")
+        return {"sent": False, "reason": "smtp_unreachable"}
     store.add_message(case_id, "out", message["to"], message["subject"], message["body"], message["body_en"],
                       msg["Message-ID"], parsed)
     store.event(case_id, "comms", f"Email sent to {message['supplier']} ({msg['To']}"

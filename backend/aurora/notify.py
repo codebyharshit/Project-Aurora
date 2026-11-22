@@ -20,10 +20,11 @@ def _send(to: str, subject: str, body: str) -> bool:
     msg = EmailMessage()
     msg["From"], msg["To"], msg["Subject"] = user, to, subject
     msg.set_content(body)
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as s:
-        s.starttls()
-        s.login(user, pw)
-        s.send_message(msg)
+    from aurora.comms import smtp_send
+    try:
+        smtp_send(msg)
+    except (OSError, smtplib.SMTPException):   # a notification must never stop the plan from updating
+        return False
     return True
 
 

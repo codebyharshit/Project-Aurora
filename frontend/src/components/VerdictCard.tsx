@@ -1,11 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { orderEditions } from "@/lib/derive";
-import { eur, num, pct, shortEdition } from "@/lib/format";
+import { duration, eur, num, pct, shortEdition, when } from "@/lib/format";
 import { APPROVE, DECIDE } from "@/lib/people";
 import type { CaseSummary, Overview } from "@/lib/types";
-import { ESTIMATE_NOTE } from "./Story";
-import { DeadlineTimeline } from "./DeadlineTimeline";
+import { ESTIMATE_NOTE, humanize } from "./Story";
 import { Card, cx, Icon, Tip } from "./ui";
 
 interface Tile {
@@ -25,10 +25,12 @@ export function VerdictCard({
   ov,
   cases,
   owners,
+  onOpen,
 }: {
   ov: Overview;
   cases: CaseSummary[];
   owners: Record<string, string[]>;
+  onOpen: (id: string) => void;
 }) {
   const g = ov.goal;
   const onTime = g?.status?.on_time_now ?? ov.verdict?.on_time_now ?? true;
@@ -70,6 +72,13 @@ export function VerdictCard({
   const cost = waiting.reduce((s, c) => s + (c.why?.cost_eur ?? c.recommendation?.cost_eur ?? 0), 0);
   const d = g?.decisions ?? { waiting: waiting.length, people: people.size, cost_eur: cost };
 
+  // Money: missing copies × what one missing copy costs on launch day (tenant config)
+  const value = Object.fromEntries((g?.priorities || []).map((p) => [p.product_id, p.value_per_unit_eur ?? 0]));
+  const lossNow = tiles.reduce((s, t) => s + (t.short || 0) * (value[t.id] || 0), 0);
+  const lossAfter = tiles.reduce((s, t) => s + (t.shortAfter || 0) * (value[t.id] || 0), 0);
+  const priced = (g?.priorities || []).filter((p) => p.value_per_unit_eur);
+  const valueNote = priced.map((p) => `${shortEdition(p.name)} €${num(p.value_per_unit_eur!)}`).join(", ");
+
   return (
     <Card>
       <div className="px-6 pb-5 pt-5">
@@ -101,26 +110,34 @@ export function VerdictCard({
           <PctTile key={t.id} t={t} />
         ))}
         <div className="px-6 py-4">
-          <p className="text-[13px] text-zinc-500">Decisions</p>
-          <p className="tnum mt-1 flex items-baseline gap-1.5 text-[26px] font-semibold leading-none tracking-tight text-soony-ink">
-            <Tip tip="Cases waiting for an approval or a decision right now.">
-              <span className={cx("cursor-help", d.waiting > 0 && "text-amber-700")}>{num(d.waiting)}</span>
+          <p className="text-[13px] text-zinc-500">If nobody acts</p>
+          <p className="tnum mt-1 flex items-baseline gap-1.5 text-[26px] font-semibold leading-none tracking-tight">
+            <Tip
+              tip={`Copies that miss Sunday × what one missing copy costs on launch day (${valueNote}). ${ESTIMATE_NOTE}`}
+            >
+              <span className={cx("cursor-help", lossNow > 0 ? "text-red-600" : "text-emerald-700")}>{eur(lossNow)}</span>
             </Tip>
-            <span className="text-[13px] font-normal text-zinc-500">waiting</span>
+            <span className="text-[13px] font-normal text-zinc-500">lost</span>
           </p>
           <p className="tnum mt-1.5 text-[13px] text-zinc-500">
-            <Tip tip="People named by the approval policy for these decisions.">
-              <span className="cursor-help">{num(d.people)} {d.people === 1 ? "person" : "people"}</span>
+            <Tip tip={`What it costs to approve all ${num(d.waiting)} fixes below: freight, sorting, local pickup. ${ESTIMATE_NOTE}`}>
+              <span className="cursor-help">
+                Fixing costs <span className="font-medium text-zinc-800">{eur(d.cost_eur)}</span>
+              </span>
             </Tip>
-            <span className="text-zinc-300"> · </span>
-            <Tip tip={`Sum of the recommended options’ cost. ${ESTIMATE_NOTE}`}>
-              <span className="cursor-help">{eur(d.cost_eur)} to commit</span>
-            </Tip>
+            {lossNow > lossAfter && (
+              <>
+                <span className="text-zinc-300"> · </span>
+                <Tip tip={`Loss drops from ${eur(lossNow)} to ${eur(lossAfter)} if every fix below is approved.`}>
+                  <span className="cursor-help text-emerald-700">saves {eur(lossNow - lossAfter)}</span>
+                </Tip>
+              </>
+            )}
           </p>
         </div>
       </div>
 
-      <DeadlineTimeline ov={ov} cases={cases} />
+      <NextSteps ov={ov} cases={waiting} owners={owners} onOpen={onOpen} />
     </Card>
   );
 }
@@ -157,6 +174,124 @@ function PctTile({ t }: { t: Tile }) {
       <p className={cx("tnum mt-1.5 text-[13px]", good ? "text-emerald-700" : t.within ? "text-zinc-500" : "text-red-600")}>
         {sub}
       </p>
+    </div>
+  );
+}
+
+/** What to do next, in plain words: each waiting decision, who signs, and how long it can wait. Most urgent first. */
+function NextSteps({
+  ov,
+  cases,
+  owners,
+  onOpen,
+}: {
+  ov: Overview;
+  cases: CaseSummary[];
+  owners: Record<string, string[]>;
+  onOpen: (id: string) => void;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  if (!cases.length) return null;
+  const now = new Date(ov.as_of).getTime();
+  // Slack = needed-by minus arrival-if-approved-now. Every hour of waiting eats one hour of slack.
+  const rows = cases
+    .map((c) => {
+      const r = c.recommendation;
+      const lum = r?.last_useful_moment ? new Date(r.last_useful_moment).getTime() : NaN;
+      const arr = r?.arrival_at ? new Date(r.arrival_at).getTime() : NaN;
+      const slack = Number.isFinite(lum) && Number.isFinite(arr) ? lum - arr : null;
+      return { c, slack, by: slack != null ? now + slack : null };
+    })
+    .sort((a, b) => (a.slack ?? Infinity) - (b.slack ?? Infinity));
+  // The clock-driven decisions are the next step; the open-ended ones fold into one line until asked for.
+  const timed = rows.filter((r) => r.slack != null);
+  const rest = rows.filter((r) => r.slack == null);
+  const byPerson = Object.entries(
+    rest.reduce<Record<string, number>>((m, r) => {
+      const who = owners[r.c.id]?.[0] || "Someone";
+      m[who] = (m[who] || 0) + 1;
+      return m;
+    }, {}),
+  ).sort((a, b) => b[1] - a[1]);
+  const shown = showAll ? rows : timed;
+
+  return (
+    <div className="border-t border-zinc-100 px-6 pb-4 pt-4">
+      <p className="flex items-baseline justify-between gap-3">
+        <span className="text-[13px] font-semibold text-zinc-900">What to do next</span>
+        <span className="text-[12px] text-zinc-400">
+          {timed.length ? `${num(timed.length)} against the clock · most urgent first` : `${num(cases.length)} decisions`}
+        </span>
+      </p>
+      <ol className="mt-2 divide-y divide-zinc-100">
+        {shown.map(({ c, slack, by }, i) => {
+          const who = owners[c.id]?.[0];
+          const cost = c.why?.cost_eur ?? c.recommendation?.cost_eur;
+          const saves = c.why?.protects_eur;
+          const late = slack != null && slack < 0;
+          return (
+            <li key={c.id}>
+              <button
+                onClick={() => onOpen(c.id)}
+                className="group flex w-full items-start gap-3 py-2.5 text-left transition hover:bg-zinc-50/80"
+              >
+                <span
+                  className={cx(
+                    "tnum mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold",
+                    i === 0 ? "bg-soony-ink text-white" : "bg-zinc-100 text-zinc-500",
+                  )}
+                >
+                  {i + 1}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[14px] leading-snug text-zinc-900">
+                    {who ? <span className="font-medium">{who}</span> : "Someone"} {DECIDE.includes(c.status) ? "decides" : "approves"}:{" "}
+                    {humanize(c.recommendation?.title || c.explanation?.headline || c.title)}
+                  </span>
+                  <span className="tnum mt-0.5 block text-[12.5px] text-zinc-500">
+                    {late ? (
+                      <span className="text-red-600">
+                        Already {duration(-slack!)} too late, even if approved now. Approve now to keep the damage small.
+                      </span>
+                    ) : by != null ? (
+                      <>
+                        <span className={cx(slack! < 6 * 3600 * 1000 ? "text-amber-700" : "text-zinc-700")}>
+                          Approve by {when(new Date(by).toISOString())}
+                        </span>{" "}
+                        ({duration(slack)} left), or the parts arrive after packing needs them.
+                      </>
+                    ) : (
+                      "No fixed deadline; it needs your judgement."
+                    )}
+                    {cost != null && (
+                      <>
+                        <span className="text-zinc-300"> · </span>costs {eur(cost)}
+                        {saves ? <>, protects up to {eur(saves)}</> : null}
+                      </>
+                    )}
+                  </span>
+                </span>
+                <span className="mt-0.5 shrink-0 text-[12px] text-zinc-400 group-hover:text-zinc-700">Open →</span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+      {rest.length > 0 && (
+        <p className="mt-1 flex flex-wrap items-baseline justify-between gap-2 border-t border-zinc-100 pt-2.5 text-[12.5px] text-zinc-500">
+          <span>
+            {showAll ? "Showing all decisions." : (
+              <>
+                Plus {num(rest.length)} with no deadline that need a judgement call:{" "}
+                {byPerson.map(([who, n]) => `${who} ${n}`).join(", ")}.
+              </>
+            )}
+          </span>
+          <button onClick={() => setShowAll((v) => !v)} className="shrink-0 text-zinc-500 hover:text-zinc-900">
+            {showAll ? "Show less" : "Show all →"}
+          </button>
+        </p>
+      )}
     </div>
   );
 }

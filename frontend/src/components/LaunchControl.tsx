@@ -49,7 +49,7 @@ export function LaunchControl() {
           <PersonView key={who} name={who} cases={cases} owners={owners} people={people} onOpen={setOpenId} />
         ) : (
           <div className="space-y-5">
-            <VerdictCard ov={ov} cases={cases} owners={owners} />
+            <VerdictCard ov={ov} cases={cases} owners={owners} onOpen={setOpenId} />
             <ProcessStrip process={process} agents={agents} open={open} />
             <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[1.2fr_1fr]">
               <WhoMustAct work={work} onPick={setWho} />

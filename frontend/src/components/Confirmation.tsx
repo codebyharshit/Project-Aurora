@@ -53,11 +53,11 @@ export function ConfirmationBanner({ c, setC }: { c: Confirmation; setC: (c: Con
           {c.result.offer_auto && c.auto !== "dismissed" && (
             <div className="mt-3 flex flex-wrap items-center gap-3 text-[13px]">
               {c.auto === "on" ? (
-                <span className="text-emerald-800">Done. Next time Aurora handles this kind of decision itself and tells you after.</span>
+                <span className="text-emerald-800">Done. Next time Aurora handles this kind of case itself and tells you after.</span>
               ) : (
                 <>
                   <span className="text-zinc-700">
-                    You’ve approved this kind of decision {n} times without changes. Let Aurora do this automatically
+                    You’ve signed off this kind of case {n} times without changes. Let Aurora do this automatically
                     next time?
                   </span>
                   <button className={btn.secondary} onClick={auto} disabled={c.auto === "saving"}>

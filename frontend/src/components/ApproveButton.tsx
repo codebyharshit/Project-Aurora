@@ -37,7 +37,7 @@ export function ApproveButton({
   approver,
   optionId,
   consequence,
-  label = "Approve",
+  label = "Sign off",
   variant = "primary",
   placement = "down",
   openSignal,
@@ -192,7 +192,7 @@ export function ApproveButton({
                 </button>
                 <button type="submit" className={btn.primary} disabled={!name.trim() || state.s === "sending"}>
                   {state.s === "sending" ? <Spinner className="border-zinc-500 border-t-white" /> : null}
-                  {state.s === "sending" ? "Approving…" : "Confirm approval"}
+                  {state.s === "sending" ? "Signing off…" : "Confirm sign-off"}
                 </button>
               </div>
             </form>
@@ -243,12 +243,12 @@ function Done({
         <div className="rounded-lg bg-zinc-50 p-3 ring-1 ring-inset ring-zinc-200">
           {state.auto === "on" ? (
             <p className="text-[13px] text-zinc-700">
-              Done. Aurora will handle this kind of decision by itself and tell you afterwards.
+              Done. Aurora will handle this kind of case by itself and tell you afterwards.
             </p>
           ) : (
             <>
               <p className="text-[13px] leading-snug text-zinc-700">
-                You’ve approved this kind of decision {n} times without changes. Let Aurora do this automatically next
+                You’ve signed off this kind of case {n} times without changes. Let Aurora do this automatically next
                 time?
               </p>
               <div className="mt-2 flex justify-end gap-2">

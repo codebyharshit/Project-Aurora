@@ -77,7 +77,7 @@ export function PersonView({
       {approve.length > 0 && (
         <section>
           <StepLabel right={<span className="text-xs text-zinc-400">most customers protected first</span>}>
-            Approve · {approve.length}
+            Sign off · {approve.length}
           </StepLabel>
           <div className="mt-3 space-y-3">
             {approve.map((c) => (
@@ -117,7 +117,7 @@ export function PersonView({
 
       {(box.in_flight.length > 0 || (inbox?.agents_for_you?.length ?? 0) > 0) && (
         <section>
-          <StepLabel right={<span className="text-xs text-zinc-400">approved · the agents follow up</span>}>
+          <StepLabel right={<span className="text-xs text-zinc-400">signed off · the agents follow up</span>}>
             Agents working for you · {box.in_flight.length + (inbox?.agents_for_you?.length ?? 0)}
           </StepLabel>
           <Card className="mt-3">

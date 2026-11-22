@@ -351,7 +351,7 @@ function ActionBar({
           approver={chain}
           optionId={option?.id}
           consequence={consequenceFor(option?.kind, chain)}
-          label={first?.person ? `Approve as ${first.person}` : "Approve"}
+          label={first?.person ? `Sign off as ${first.person}` : "Sign off"}
         />}
       </div>
     );

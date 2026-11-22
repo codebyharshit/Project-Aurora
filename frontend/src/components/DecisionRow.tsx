@@ -42,7 +42,7 @@ export function DecisionRow({
           ) : (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2 py-0.5 font-medium text-amber-800">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-              Needs your approval
+              Needs your sign-off
             </span>
           )}
           {c.playbook_title && <span className="truncate">{c.playbook_title}</span>}
@@ -62,7 +62,7 @@ export function DecisionRow({
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 px-5 py-2.5">
         <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-zinc-500">
-          {policy || "Aurora found no approval rule for this; anyone on the launch team can approve."}
+          {policy || "Aurora found no approval rule for this; anyone on the launch team can sign off."}
         </p>
         <div className="flex shrink-0 items-center gap-1.5">
           <button className={btn.secondary} onClick={() => onOpen(c.id)}>

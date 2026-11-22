@@ -37,16 +37,54 @@ def _now() -> str:
     return datetime.now().astimezone().isoformat(timespec="seconds")
 
 
+class _Rows:
+    """Query result fetched while the lock was held, so it is safe to read after release."""
+
+    def __init__(self, cur: sqlite3.Cursor):
+        self._rows = cur.fetchall()
+        self.lastrowid = cur.lastrowid
+        self.rowcount = cur.rowcount
+
+    def fetchone(self):
+        return self._rows[0] if self._rows else None
+
+    def fetchall(self):
+        return self._rows
+
+    def __iter__(self):
+        return iter(self._rows)
+
+
+class _LockedDB:
+    """One sqlite connection shared by API threads and the agent loop: every call takes the same lock."""
+
+    def __init__(self, conn: sqlite3.Connection, lock: threading.RLock):
+        self._conn, self._lock = conn, lock
+
+    def execute(self, sql: str, args: tuple = ()) -> _Rows:
+        with self._lock:
+            return _Rows(self._conn.execute(sql, args))
+
+    def executescript(self, sql: str) -> None:
+        with self._lock:
+            self._conn.executescript(sql)
+
+    def commit(self) -> None:
+        with self._lock:
+            self._conn.commit()
+
+
 class Store:
     def __init__(self, tenant: Tenant, path: Path | None = None):
         self.path = path or tenant.state_dir / "aurora.sqlite"
-        self._lock = threading.Lock()
-        self.db = sqlite3.connect(self.path, check_same_thread=False)
-        self.db.row_factory = sqlite3.Row
+        self._lock = threading.RLock()
+        conn = sqlite3.connect(self.path, check_same_thread=False)
+        conn.row_factory = sqlite3.Row
+        self.db = _LockedDB(conn, self._lock)
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.executescript(SCHEMA)
 
-    def _exec(self, sql: str, args: tuple = ()) -> sqlite3.Cursor:
+    def _exec(self, sql: str, args: tuple = ()) -> _Rows:
         with self._lock:
             cur = self.db.execute(sql, args)
             self.db.commit()

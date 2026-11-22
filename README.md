@@ -1,4 +1,10 @@
+<img src="docs/assets/aurora-logo.jpeg" alt="Aurora" width="160">
+
 # Aurora · Keep the Line Running
+
+> Your ERP says you're fine. Your paperwork says you're not. Aurora closes the gap before the trucks leave.
+
+**Submission:** [Pitch deck](Aurora.pdf) · Demo video: _link_ · Live prototype: _link_ · [Agent flow](docs/assets/agent-flow-diagram.png) · [Eval 21/21](docs/EVAL.md)
 
 **Your ERP says you're fine. Your paperwork says you're not.** Aurora is a team of specialised AI agents that finds the gap, prices it against your next deadline, and closes it within your own rules and with your approval: it reads every document (scans, handwriting, Korean/Polish/Chinese PDFs), plans backwards from the deadline, routes each decision to the one person your policy names, emails and **negotiates** with suppliers, and tracks the goods until they arrive.
 
@@ -16,6 +22,8 @@ Found from the raw files, nothing hardcoded (see [`docs/EVAL.md`](docs/EVAL.md),
 Proven end to end with real email: approve → Polish email to the supplier → counter-offer read (split delivery) → agent counters within the mandate → supplier accepts → waybill → in transit.
 
 ## How it works
+
+![Aurora agent flow: sources → understand → find the gaps → decide → act](docs/assets/agent-flow-diagram.png)
 
 Goal → process → agents → people. One specialised agent per business task on Soony's seven process steps (Order · Confirm · Ship · Track · Receive · Pack · Sell). See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and the rules for autonomy and human-in-the-loop in [`docs/OPERATING_RULES.md`](docs/OPERATING_RULES.md).
 

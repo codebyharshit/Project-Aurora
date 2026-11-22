@@ -18,6 +18,7 @@ interface Tile {
   shortAfter: number;
   tolerance: number;
   collectors: boolean;
+  approvers?: string[];
 }
 
 /** The one card everyone reads first: the verdict and three numbers. */
@@ -64,10 +65,16 @@ export function VerdictCard({
           collectors: /collector/i.test(e.name),
         };
       });
-  const ordered = [...tiles].sort((a, b) => Number(b.collectors) - Number(a.collectors));
-
   // Decisions: waiting · people · € of the recommended options
   const waiting = cases.filter((c) => APPROVE.includes(c.status) || DECIDE.includes(c.status));
+  // Who has to sign for each edition's missing share: approvers of waiting cases that add copies to it.
+  for (const t of tiles) {
+    const names = waiting
+      .filter((c) => (c.impact?.by_product?.[t.id] ?? 0) > 0)
+      .flatMap((c) => owners[c.id] || []);
+    t.approvers = [...new Set(names)];
+  }
+  const ordered = [...tiles].sort((a, b) => Number(b.collectors) - Number(a.collectors));
   const people = new Set(waiting.flatMap((c) => owners[c.id] || []));
   const cost = waiting.reduce((s, c) => s + (c.why?.cost_eur ?? c.recommendation?.cost_eur ?? 0), 0);
   const d = g?.decisions ?? { waiting: waiting.length, people: people.size, cost_eur: cost };
@@ -82,8 +89,8 @@ export function VerdictCard({
   return (
     <Card>
       <div className="px-6 pb-5 pt-5">
-        <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
-          <Icon name="target" className="h-3.5 w-3.5 text-zinc-400" />
+        <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-600">
+          <Icon name="target" className="h-3.5 w-3.5 text-zinc-500" />
           Will we make {g?.deadline?.name && /sun/i.test(g.deadline.name) ? g.deadline.name : "Sunday 20:00"}?
         </p>
         <p className="mt-2.5 flex items-start gap-3 text-[20px] font-semibold leading-snug tracking-tight text-soony-ink">
@@ -97,7 +104,7 @@ export function VerdictCard({
           <span>
             {text || (onTime ? "Yes, on time." : "Not yet.")}
             {!onTime && onTimeAfter && (
-              <span className="mt-0.5 block text-[14px] font-normal text-zinc-500">
+              <span className="mt-0.5 block text-[14px] font-normal text-zinc-600">
                 With every approval below: on time.
               </span>
             )}
@@ -110,16 +117,16 @@ export function VerdictCard({
           <PctTile key={t.id} t={t} />
         ))}
         <div className="px-6 py-4">
-          <p className="text-[13px] text-zinc-500">If nobody acts</p>
+          <p className="text-[13px] text-zinc-600">If nobody acts</p>
           <p className="tnum mt-1 flex items-baseline gap-1.5 text-[26px] font-semibold leading-none tracking-tight">
             <Tip
               tip={`Copies that miss Sunday × what one missing copy costs on launch day (${valueNote}). ${ESTIMATE_NOTE}`}
             >
               <span className={cx("cursor-help", lossNow > 0 ? "text-red-600" : "text-emerald-700")}>{eur(lossNow)}</span>
             </Tip>
-            <span className="text-[13px] font-normal text-zinc-500">lost</span>
+            <span className="text-[13px] font-normal text-zinc-600">lost</span>
           </p>
-          <p className="tnum mt-1.5 text-[13px] text-zinc-500">
+          <p className="tnum mt-1.5 text-[13px] text-zinc-600">
             <Tip tip={`What it costs to approve all ${num(d.waiting)} fixes below: freight, sorting, local pickup. ${ESTIMATE_NOTE}`}>
               <span className="cursor-help">
                 Fixing costs <span className="font-medium text-zinc-800">{eur(d.cost_eur)}</span>
@@ -153,9 +160,9 @@ function PctTile({ t }: { t: Tile }) {
       : `${num(t.short)} short`;
   return (
     <div className="px-6 py-4">
-      <p className="text-[13px] text-zinc-500">
+      <p className="text-[13px] text-zinc-600">
         {t.label}
-        {t.collectors && <span className="ml-1.5 text-[11px] text-zinc-400">priority 1</span>}
+        {t.collectors && <span className="ml-1.5 text-[11px] text-zinc-500">priority 1</span>}
       </p>
       <p className="tnum mt-1 flex items-baseline gap-1.5 text-[26px] font-semibold leading-none tracking-tight">
         <Tip tip="Share of all launch copies that can be packed now, counting approved decisions. Source: ERP corrected by the paperwork.">
@@ -169,10 +176,64 @@ function PctTile({ t }: { t: Tile }) {
             </Tip>
           </>
         )}
-        <span className="text-[13px] font-normal text-zinc-500">{changes ? "with approvals" : "of launch"}</span>
+        <span className="text-[13px] font-normal text-zinc-600">{changes ? "with approvals" : "of launch"}</span>
       </p>
-      <p className={cx("tnum mt-1.5 text-[13px]", good ? "text-emerald-700" : t.within ? "text-zinc-500" : "text-red-600")}>
+      <p className={cx("tnum mt-1.5 text-[13px]", good ? "text-emerald-700" : t.within ? "text-zinc-600" : "text-red-600")}>
         {sub}
+      </p>
+      <GoalBar t={t} />
+    </div>
+  );
+}
+
+/** How much of this edition's launch goal is secured, what waits for a sign-off, and what follows later. */
+function GoalBar({ t }: { t: Tile }) {
+  const clamp = (v: number) => Math.max(0, Math.min(100, v));
+  const secured = clamp(t.now);
+  const pending = clamp(Math.max(t.after, t.now) - secured);
+  const later = clamp(100 - secured - pending);
+  const tol = t.tolerance > 0 ? clamp(100 - t.tolerance) : null;
+  const who = t.approvers?.length ? t.approvers.map((n) => n.split(" ").slice(-1)[0]).join(", ") : "";
+  return (
+    <div className="mt-3">
+      <div className="relative flex h-2 overflow-hidden rounded-full bg-zinc-100">
+        <span title={`Secured: ${pct(secured)} of launch can be packed now.`} className="block h-full bg-emerald-500 transition-all duration-700" style={{ width: `${secured}%` }} />
+        {pending > 0.05 && (
+          <span
+              title={`Needs approval: ${pct(pending)} more ships if the waiting decisions are signed${who ? ` (${who})` : ""}.`}
+              className="block h-full bg-amber-400 transition-all duration-700"
+              style={{
+                width: `${pending}%`,
+                backgroundImage: "repeating-linear-gradient(-45deg, rgba(255,255,255,.45) 0 3px, transparent 3px 6px)",
+              }}
+            />
+        )}
+        {later > 0.05 && (
+          <span title={`Follows later: ${pct(later)} of launch misses Sunday even with every approval.`} className="block h-full bg-zinc-300 transition-all duration-700" style={{ width: `${later}%` }} />
+        )}
+        {tol !== null && (
+          <span
+            aria-hidden
+            className="absolute -top-0.5 h-3 w-px bg-zinc-700"
+            style={{ left: `${tol}%` }}
+            title={`${num(t.tolerance)}% tolerance`}
+          />
+        )}
+      </div>
+      <p className="tnum mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-zinc-500">
+        <span className="inline-flex items-center gap-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> {pct(secured)} secured
+        </span>
+        {pending > 0.05 && (
+          <span className="inline-flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> {pct(pending)} needs approval{who ? ` · ${who}` : ""}
+          </span>
+        )}
+        {later > 0.05 && (
+          <span className="inline-flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-zinc-300" /> {pct(later)} later
+          </span>
+        )}
       </p>
     </div>
   );
@@ -219,7 +280,7 @@ function NextSteps({
     <div className="border-t border-zinc-100 px-6 pb-4 pt-4">
       <p className="flex items-baseline justify-between gap-3">
         <span className="text-[13px] font-semibold text-zinc-900">What to do next</span>
-        <span className="text-[12px] text-zinc-400">
+        <span className="text-[12px] text-zinc-500">
           {timed.length ? `${num(timed.length)} against the clock · most urgent first` : `${num(cases.length)} decisions`}
         </span>
       </p>
@@ -238,7 +299,7 @@ function NextSteps({
                 <span
                   className={cx(
                     "tnum mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold",
-                    i === 0 ? "bg-soony-ink text-white" : "bg-zinc-100 text-zinc-500",
+                    i === 0 ? "bg-soony-ink text-white" : "bg-zinc-100 text-zinc-600",
                   )}
                 >
                   {i + 1}
@@ -248,7 +309,7 @@ function NextSteps({
                     {who ? <span className="font-medium">{who}</span> : "Someone"} {DECIDE.includes(c.status) ? "decides" : "approves"}:{" "}
                     {humanize(c.recommendation?.title || c.explanation?.headline || c.title)}
                   </span>
-                  <span className="tnum mt-0.5 block text-[12.5px] text-zinc-500">
+                  <span className="tnum mt-0.5 block text-[12.5px] text-zinc-600">
                     {late ? (
                       <span className="text-red-600">
                         Already {duration(-slack!)} too late, even if approved now. Approve now to keep the damage small.
@@ -271,14 +332,14 @@ function NextSteps({
                     )}
                   </span>
                 </span>
-                <span className="mt-0.5 shrink-0 text-[12px] text-zinc-400 group-hover:text-zinc-700">Open →</span>
+                <span className="mt-0.5 shrink-0 text-[12px] text-zinc-500 group-hover:text-zinc-700">Open →</span>
               </button>
             </li>
           );
         })}
       </ol>
       {rest.length > 0 && (
-        <p className="mt-1 flex flex-wrap items-baseline justify-between gap-2 border-t border-zinc-100 pt-2.5 text-[12.5px] text-zinc-500">
+        <p className="mt-1 flex flex-wrap items-baseline justify-between gap-2 border-t border-zinc-100 pt-2.5 text-[12.5px] text-zinc-600">
           <span>
             {showAll ? "Showing all decisions." : (
               <>
@@ -287,7 +348,7 @@ function NextSteps({
               </>
             )}
           </span>
-          <button onClick={() => setShowAll((v) => !v)} className="shrink-0 text-zinc-500 hover:text-zinc-900">
+          <button onClick={() => setShowAll((v) => !v)} className="shrink-0 text-zinc-600 hover:text-zinc-900">
             {showAll ? "Show less" : "Show all →"}
           </button>
         </p>

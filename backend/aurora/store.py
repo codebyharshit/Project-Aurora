@@ -231,7 +231,7 @@ class Store:
             else:
                 status = c["status"]
             self._exec("UPDATE cases SET status=?, data=? WHERE id=?", (status, json.dumps(d, default=str), c["id"]))
-        self._exec("DELETE FROM events WHERE actor IN ('human','comms','negotiator','tracker','agent','timer')")
+        self._exec("DELETE FROM events WHERE actor IN ('human','comms','negotiator','tracker','agent','timer','assistant')")
         self._exec("DELETE FROM messages")
         self._exec("DELETE FROM actions")
         self._exec("DELETE FROM timers")

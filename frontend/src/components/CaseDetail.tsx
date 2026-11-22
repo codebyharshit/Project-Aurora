@@ -9,6 +9,7 @@ import { ApproveButton, consequenceFor } from "./ApproveButton";
 import { Benefit, Facts, humanize, IfNot, NextSteps, policySentence } from "./Story";
 import { EvidenceLink, EvidencePanel } from "./Evidence";
 import { GoalLine } from "./GoalLine";
+import { AskAgents } from "./AskAgents";
 import { DecideForm } from "./Sections";
 import { InvestigationBrief } from "./Investigation";
 import { Avatar, btn, cx, Icon, type IconName, Pulse, Spinner, StatusPill, statusLabel, Tip } from "./ui";
@@ -139,6 +140,9 @@ function Body({ c, names, layout }: { c: Detail; names: Record<string, string>; 
         )}
       </div>
       <div className="px-6">{progress}</div>
+      <div className="px-6">
+        <AskAgents caseId={c.id} playbook={d.investigation?.playbook} />
+      </div>
 
       <div className="mx-6 mt-8 border-t border-zinc-100 pt-4">
         <button className={btn.quiet} onClick={() => setDetails(!details)} aria-expanded={details}>
@@ -527,6 +531,7 @@ const ACTOR: Record<string, { icon: IconName; label: string }> = {
   notify: { icon: "mail", label: "Aurora" },
   negotiator: { icon: "spark", label: "Negotiator" },
   tracker: { icon: "truck", label: "Tracker" },
+  assistant: { icon: "spark", label: "Ask the agents" },
 };
 
 function Timeline({ events, status }: { events: Detail["events"]; status: CaseStatus }) {

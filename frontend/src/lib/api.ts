@@ -6,6 +6,8 @@ import type {
   Autonomy,
   CaseDetail,
   CaseSummary,
+  ChatBody,
+  ChatResult,
   DecideBody,
   DecideResult,
   Inbox,
@@ -115,6 +117,7 @@ export const api = {
   setAuto: (playbookId: string, on: boolean) =>
     postJSON<Autonomy>(`/api/playbooks/${encodeURIComponent(playbookId)}/auto?on=${on}`),
   poll: () => postJSON<PollResult>(`/api/poll`),
+  chat: (body: ChatBody) => postJSON<ChatResult>(`/api/chat`, body),
 };
 
 export function fileUrl(path: string): string {

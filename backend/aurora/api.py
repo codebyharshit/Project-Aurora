@@ -245,6 +245,35 @@ def decide(cid: str, body: Decide) -> dict:
     return {"ok": True, "saved_playbook": saved}
 
 
+class ChatMsg(BaseModel):
+    role: str  # "user" | "assistant"
+    text: str
+
+
+class Chat(BaseModel):
+    question: str
+    asked_by: str = "someone"
+    case_id: str | None = None
+    history: list[ChatMsg] = []
+
+
+@app.post("/api/chat")
+async def chat(body: Chat) -> dict:
+    """Ask the agents: read-only answers grounded in the case, playbooks, rules and policy."""
+    from aurora.agents import llm
+    from aurora.chat import answer
+    if body.case_id and not store.case(body.case_id):
+        raise HTTPException(404, "case not found")
+    if not llm.available():
+        raise HTTPException(503, "The agents are offline: set the LLM key in .env")
+    res = await asyncio.to_thread(answer, tenant, store, case_id=body.case_id, question=body.question,
+                                  history=[m.model_dump() for m in body.history], asked_by=body.asked_by)
+    if body.case_id:
+        store.event(body.case_id, "assistant", f"{body.asked_by} asked: {body.question[:110]} · {res['answer'][:160]}",
+                    {"question": body.question, **res})
+    return res
+
+
 @app.post("/api/playbooks/{pid}/auto")
 def set_auto(pid: str, on: bool = True) -> dict:
     store.set_auto(pid, on)

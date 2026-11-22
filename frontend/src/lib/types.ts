@@ -354,6 +354,27 @@ export interface DecideBody {
   save_as_playbook: boolean;
 }
 
+export interface ChatMessage {
+  role: "user" | "assistant";
+  text: string;
+  sources?: string[];
+  suggested_decision?: string | null;
+}
+
+export interface ChatBody {
+  question: string;
+  asked_by: string;
+  case_id: string | null;
+  history: { role: "user" | "assistant"; text: string }[];
+}
+
+export interface ChatResult {
+  answer: string;
+  sources: string[];
+  suggested_decision: string | null;
+  what_if: unknown | null;
+}
+
 export interface DecideResult {
   ok: boolean;
   save_as_playbook?: boolean;

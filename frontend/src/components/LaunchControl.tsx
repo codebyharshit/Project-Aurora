@@ -7,6 +7,7 @@ import { editionNames } from "@/lib/derive";
 import { OPEN, peopleWithWork, useOwners } from "@/lib/people";
 import { useViewAs } from "@/lib/viewAs";
 import { AgentsFeed } from "./AgentsFeed";
+import { AskAgents } from "./AskAgents";
 import { CaseDrawer } from "./CaseDrawer";
 import { Header, StatusRow } from "./Header";
 import { PersonView } from "./PersonView";
@@ -55,6 +56,9 @@ export function LaunchControl() {
               <WhoMustAct work={work} onPick={setWho} />
               <AgentsFeed agents={agents} />
             </div>
+            <Card className="p-4">
+              <AskAgents caseId={null} className="" />
+            </Card>
           </div>
         )}
       </main>

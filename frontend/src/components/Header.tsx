@@ -55,9 +55,10 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
 
         <div className="flex items-center justify-end gap-2.5">
           <div className="flex h-8 items-center gap-2 rounded-full bg-white py-1 pl-2.5 pr-3 ring-1 ring-inset ring-zinc-200">
-            <Icon name="truck" className={cx("h-4 w-4", urgent ? "text-amber-600" : "text-zinc-500")} />
+            <Icon name="truck" className={cx("h-4 w-4", urgent ? "text-amber-600" : "text-zinc-600")} />
             {ov ? (
               <Tip
+                below
                 tip={
                   <>
                     Counted from the data clock ({whenLong(ov.as_of)}) to the deadline ({whenLong(ov.deadline)}).
@@ -69,11 +70,11 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
                   <span className={cx("tnum font-semibold", urgent ? "text-amber-700" : "text-zinc-900")}>
                     {duration(left)}
                   </span>
-                  <span className="text-zinc-400"> · {when(ov.deadline)}</span>
+                  <span className="text-zinc-500"> · {when(ov.deadline)}</span>
                 </span>
               </Tip>
             ) : (
-              <span className="text-[13px] text-zinc-400">Loading deadline…</span>
+              <span className="text-[13px] text-zinc-500">Loading deadline…</span>
             )}
           </div>
           <ViewAs counts={counts} />
@@ -88,8 +89,9 @@ export function Header({ ov, counts }: { ov?: Overview; counts?: Record<string, 
 export function StatusRow({ ov }: { ov?: Overview }) {
   if (!ov) return null;
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-400">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-500">
       <Tip
+        below
         tip={
           ov.last_run ? (
             <>
@@ -106,7 +108,7 @@ export function StatusRow({ ov }: { ov?: Overview }) {
           Data as of {when(ov.as_of)}
         </span>
       </Tip>
-      <Tip tip="Delivery notes, order confirmations, supplier notices, memos and ERP tables read by the agents.">
+      <Tip below tip="Delivery notes, order confirmations, supplier notices, memos and ERP tables read by the agents.">
         <span className="tnum inline-flex items-center gap-1.5">
           <Icon name="doc" className="h-3.5 w-3.5 text-zinc-300" />
           {num(ov.documents_read)} documents read
@@ -151,7 +153,7 @@ function PollButton() {
         {busy ? <Spinner /> : <Icon name="refresh" className="h-3.5 w-3.5" />}
         <span className="text-xs">{busy ? "Checking…" : "Check for updates"}</span>
       </button>
-      {msg && <span className="animate-fade text-xs text-zinc-500">{msg}</span>}
+      {msg && <span className="animate-fade text-xs text-zinc-600">{msg}</span>}
     </span>
   );
 }

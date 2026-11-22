@@ -36,18 +36,18 @@ export function SectionTitle({
   return (
     <div className="flex items-baseline justify-between gap-3">
       <div className="flex items-baseline gap-2">
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">{children}</h2>
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-600">{children}</h2>
         {count !== undefined && (
           <span
             className={cx(
               "tnum inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px] font-semibold",
-              accent && count > 0 ? "bg-amber-500 text-white" : "bg-zinc-100 text-zinc-500",
+              accent && count > 0 ? "bg-amber-500 text-white" : "bg-zinc-100 text-zinc-600",
             )}
           >
             {count}
           </span>
         )}
-        {hint && <span className="text-xs text-zinc-400">{hint}</span>}
+        {hint && <span className="text-xs text-zinc-500">{hint}</span>}
       </div>
       {right}
     </div>
@@ -59,7 +59,7 @@ export function Src({ children, title }: { children: ReactNode; title?: string }
   return (
     <span
       title={title}
-      className="inline-flex items-center rounded px-1 py-px text-[10px] font-medium uppercase tracking-wide text-zinc-400 ring-1 ring-inset ring-zinc-200"
+      className="inline-flex items-center rounded px-1 py-px text-[10px] font-medium uppercase tracking-wide text-zinc-500 ring-1 ring-inset ring-zinc-200"
     >
       {children}
     </span>
@@ -82,7 +82,7 @@ export function Chip({
     amber: "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200",
     green: "bg-emerald-50 text-emerald-700",
     red: "bg-red-50 text-red-700",
-    ghost: "text-zinc-500 ring-1 ring-inset ring-zinc-200",
+    ghost: "text-zinc-600 ring-1 ring-inset ring-zinc-200",
     blue: "bg-soony-blue/8 text-soony-blue",
   } as const;
   return (
@@ -100,13 +100,27 @@ export function Chip({
 }
 
 /** Hover tooltip, pure CSS. */
-export function Tip({ children, tip, className }: { children: ReactNode; tip: ReactNode; className?: string }) {
+export function Tip({
+  children,
+  tip,
+  className,
+  below,
+}: {
+  children: ReactNode;
+  tip: ReactNode;
+  className?: string;
+  /** Open under the trigger: for anything near the top of the page, where an upward tip would be cut off. */
+  below?: boolean;
+}) {
   return (
     <span className={cx("group/tip relative inline-flex", className)}>
       {children}
       <span
         role="tooltip"
-        className="pointer-events-none absolute bottom-full left-0 z-30 mb-2 w-max max-w-[320px] translate-y-1 rounded-lg bg-zinc-900 px-2.5 py-1.5 text-xs leading-snug text-zinc-100 opacity-0 shadow-lg transition group-hover/tip:translate-y-0 group-hover/tip:opacity-100"
+        className={cx(
+          "pointer-events-none absolute left-0 z-40 w-max max-w-[320px] rounded-lg bg-zinc-900 px-2.5 py-1.5 text-xs leading-snug text-zinc-100 opacity-0 shadow-lg transition group-hover/tip:translate-y-0 group-hover/tip:opacity-100",
+          below ? "top-full mt-2 -translate-y-1" : "bottom-full mb-2 translate-y-1",
+        )}
       >
         {tip}
       </span>
@@ -120,8 +134,8 @@ export const btn = {
   secondary:
     "inline-flex items-center justify-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 ring-1 ring-inset ring-zinc-200 transition hover:bg-zinc-50 hover:text-zinc-900 disabled:opacity-40",
   quiet:
-    "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-sm text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 disabled:opacity-40",
-  link: "inline-flex items-center gap-1 text-sm text-zinc-500 underline-offset-2 transition hover:text-zinc-900 hover:underline",
+    "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-sm text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 disabled:opacity-40",
+  link: "inline-flex items-center gap-1 text-sm text-zinc-600 underline-offset-2 transition hover:text-zinc-900 hover:underline",
 };
 
 const STATUS: Record<CaseStatus, { label: string; tone: "neutral" | "amber" | "green" | "red" | "ghost" }> = {
@@ -263,7 +277,7 @@ export function StepLabel({ n, children, right }: { n?: number | string; childre
             {n}
           </span>
         )}
-        <h2 className="text-[12px] font-semibold uppercase tracking-[0.08em] text-zinc-500">{children}</h2>
+        <h2 className="text-[12px] font-semibold uppercase tracking-[0.08em] text-zinc-600">{children}</h2>
       </div>
       {right}
     </div>

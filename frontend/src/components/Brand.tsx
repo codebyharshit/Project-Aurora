@@ -23,10 +23,10 @@ export function SoonyWordmark({ className, size = 17 }: { className?: string; si
 /** The existing Aurora mark, small, with a quiet "powered by". */
 export function AuroraMark({ className }: { className?: string }) {
   return (
-    <Link href="/" className={cx("inline-flex items-center gap-1.5 whitespace-nowrap", className)} title="Aurora">
+    <Link href="/about" className={cx("inline-flex items-center gap-1.5 whitespace-nowrap", className)} title="About Aurora">
       <Mark className="h-4 w-4" />
-      <span className="text-[11px] text-zinc-400">
-        powered by <span className="font-medium text-zinc-500">Aurora</span>
+      <span className="text-[11px] text-zinc-500">
+        powered by <span className="font-medium text-zinc-600">Aurora</span>
       </span>
     </Link>
   );

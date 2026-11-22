@@ -1,0 +1,9 @@
+.git
+.venv
+.env
+**/__pycache__
+**/.DS_Store
+frontend
+data/snapshots/*.zip
+docs
+*.png

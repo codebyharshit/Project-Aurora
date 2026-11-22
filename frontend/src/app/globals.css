@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Soony's launch room, powered by Aurora: Soony blue is the primary, amber stays "needs you", red stays "at risk". */
+@theme {
+  --color-soony-blue: #0033a0;
+  --color-soony-red: #e2231a;
+  --color-soony-ink: #0b1220;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-zinc-50);
+  color: var(--color-zinc-900);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-soony-blue) 18%, transparent);
+}
+
+/* Shift bands on the deadline timeline. */
+.shift-hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in oklab, var(--color-soony-blue) 10%, transparent) 0 2px,
+    transparent 2px 5px
+  );
+}
+
+/* Hypothetical bars ("if you approve") get a quiet hatch so they never read as fact. */
+.bar-hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.45) 0 3px,
+    transparent 3px 6px
+  );
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slide {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@utility animate-fade {
+  animation: fade 160ms ease-out;
+}
+@utility animate-pop {
+  animation: pop 140ms ease-out;
+}
+@utility animate-slide {
+  animation: slide 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

@@ -1,0 +1,100 @@
+# Shared playbook library: known drills, stored as data. A signal whose type matches a
+# playbook runs that drill; anything else becomes a NOVEL case for human review.
+# tier: observe | ask (no commitment, autonomous) | commit (needs PP-07 approver) | never
+- id: qty_mismatch_document_vs_erp
+  title: Delivery note quantity differs from the goods receipt
+  signal_type: qty_contradiction
+  tier: commit
+  approval: purchase
+  option_kinds: [accept_offer]
+  also: [Ask the DC for a physical count, Propose an ERP correction of the receipt]
+  supplier_intent: Confirm availability, quantity and loading time for the offered stock and accept it.
+- id: rejected_lot_in_unrestricted_stock
+  title: A lot that failed inspection is counted as usable stock
+  signal_type: rejected_lot_in_stock
+  tier: commit
+  approval: concession
+  option_kinds: [recover_rejected_lot, accept_offer]
+  also: [Block the lot in the ERP until released]
+- id: short_shipment
+  title: Supplier shipped less than ordered
+  signal_type: short_shipment
+  tier: ask
+  approval: none
+  option_kinds: []
+  also: [Allocate the shortage by customer priority, Ask the supplier for a faster route for the balance]
+  supplier_intent: Ask whether the balance can fly earlier or on another carrier, and at what cost.
+- id: arrived_not_collected
+  title: Cargo arrived at the port but was not collected
+  signal_type: arrived_not_collected
+  tier: commit
+  approval: dock_slot
+  option_kinds: [collect_at_port]
+  also: [Update the shipment tracker]
+- id: unreleased_revision_in_stock
+  title: Stock or inbound parts carry a revision that may no longer be packed
+  signal_type: banned_revision
+  tier: commit
+  approval: concession
+  option_kinds: []
+  also: [Quarantine the batch, Check today's packed output for the old revision, Send the new revision to suppliers still on the old one]
+- id: supplier_qualification_expired
+  title: A supplier's conditional release has expired
+  signal_type: qualification_expired
+  tier: commit
+  approval: po_extension
+  option_kinds: []
+  also: [Request the written extension or hold the POs]
+- id: receipt_without_po
+  title: Goods received without a purchase order
+  signal_type: receipt_without_po
+  tier: ask
+  approval: none
+  option_kinds: []
+  also: [Ask the supplier for the order reference, Clarify whether the goods belong in the product]
+  supplier_intent: Ask which order the delivered goods belong to and who requested them.
+- id: unclear_document_quantity
+  title: A document quantity could not be read with confidence
+  signal_type: needs_review
+  tier: ask
+  approval: none
+  option_kinds: []
+  also: [Ask receiving to check the paper original]
+- id: bank_detail_change
+  title: Supplier bank details changed
+  signal_type: bank_detail_change
+  tier: never
+  approval: none
+  option_kinds: []
+  also: [Verify by calling the known contact from the contract, Never pay to the new account before verification]
+- id: confirmation_mismatch
+  title: Supplier confirmation differs from our order
+  signal_type: confirmation_mismatch
+  tier: ask
+  approval: none
+  option_kinds: []
+  also: [Ask the supplier to correct or explain the confirmation, Update the order if the change is acceptable, Re-plan if a date now misses the deadline]
+  supplier_intent: Point out the difference between our order and their confirmation and ask them to confirm the correct quantity, date, price or revision.
+- id: stale_tracking
+  title: A shipment stopped reporting its position
+  signal_type: stale_tracking
+  tier: ask
+  approval: none
+  option_kinds: []
+  also: [Ask the carrier or supplier for the current position and ETA, Treat the ETA as unknown in the plan until confirmed]
+  supplier_intent: Ask for the current position and a confirmed arrival time for the shipment.
+- id: tracking_contradiction
+  title: Two sources disagree on where a shipment is
+  signal_type: tracking_contradiction
+  tier: observe
+  approval: none
+  option_kinds: []
+  also: [Use the ERP status (newest timestamp) in the plan, Update the shared tracker so people act on the right status]
+- id: po_unconfirmed
+  title: An order due soon was never confirmed
+  signal_type: po_unconfirmed
+  tier: ask
+  approval: none
+  option_kinds: []
+  also: [Request the order confirmation with quantity and delivery date, Re-plan if the supplier cannot confirm in time]
+  supplier_intent: Ask the supplier to confirm the open order with quantity and delivery date.

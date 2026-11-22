@@ -1,0 +1,8 @@
+.git
+.venv
+.env
+frontend
+docs
+data/snapshots/*.zip
+**/__pycache__
+*.png

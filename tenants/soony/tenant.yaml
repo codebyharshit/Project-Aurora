@@ -1,0 +1,152 @@
+# Tenant configuration: everything customer-specific lives here, never in code.
+tenant: soony
+display_name: Soony Interactive GmbH
+timezone: Europe/Berlin
+
+source:
+  kind: portal_api
+  base_url: https://start-hack-portal-cxh3crbdaef2f8gt.westeurope-01.azurewebsites.net
+  token_env: LIO_TOKEN
+  local_dir: data/current/soony-data   # where the latest archive is unpacked
+
+deadline:
+  name: Grand Heist 6 launch
+  at: "2026-11-22T20:00:00+01:00"
+  description: Trucks to retail leave the DC; anything not packed misses launch day.
+  site: DC-HAM
+
+# Pack-out shifts before the deadline (no night shift).
+shifts:
+  - {start: "2026-11-21T06:00:00+01:00", end: "2026-11-21T22:00:00+01:00"}
+  - {start: "2026-11-22T06:00:00+01:00", end: "2026-11-22T20:00:00+01:00"}
+
+# Finished products, in customer priority order (CPO memo 2026-11-21: Collector's first).
+products:
+  - id: FG-GH6-CE
+    name: Collector's Edition
+    priority: 1
+    rate_per_hour: 900
+    customer_weight: 10   # all pre-ordered, numbered; a miss is refunded and the customer lost
+    max_shortfall_pct_of_launch: 0     # CPO memo: Collector's first, no shortfall
+  - id: FG-GH6-STD
+    name: Standard Edition
+    priority: 2
+    rate_per_hour: 6000
+    customer_weight: 1    # pre-orders already covered; a late copy is still sold on Tuesday
+    max_shortfall_pct_of_launch: 2     # Felix (Senior Buyer): a 1–2% delay is acceptable if pre-orders are served
+
+# Pack-out status workbooks (remaining per product); newest wins.
+status_files: soony/context/launch_status*.xlsx
+
+# Components the BOM lists but that are fitted by the supplier (never stocked separately).
+# Learned from documents; confirmed by a human at onboarding.
+supplier_fitted_components: [CMP-MAG-005]
+
+# Transit added after a carrier's ETA at the arrival hub, until usable at the site.
+last_mile_hours:
+  air: 18     # FRA -> Hamburg truck + receiving
+  sea: 30     # port -> DC truck + dock slot + receiving
+  road: 4
+
+# Cargo already at the port: truck booking + drive + dock slot until usable.
+port_pickup_hours: 10
+
+thresholds:
+  stale_tracking_hours: 12
+  arrived_not_collected_hours: 12
+  min_extraction_confidence: 0.7
+
+# Tabular sources: how customer files map to canonical tables. Detected columns are
+# matched by name; anything unmapped is reported, not dropped.
+tables:
+  parts:          {glob: "soony/master/components*.csv", exclude: ["*update*"]}
+  products:       {glob: "soony/master/products.csv"}
+  bom:            {glob: "soony/master/bom.csv"}
+  bom_changes:    {glob: "soony/master/bom_delta_*.csv"}
+  routes:         {glob: "soony/master/routes.csv"}
+  po_lines:       {glob: "soony/erp/purchase_orders_*.csv"}
+  receipts:       {glob: "soony/erp/goods_receipts.csv"}
+  stock:          {glob: "soony/erp/stock_snapshot.csv"}
+  stock_updates:  {glob: "__learned_only__"}        # no file configured: the Schema Mapper finds them
+  shipments_tracker: {glob: "__learned_only__"}
+  shipments:      {glob: "soony/erp/open_shipments.csv"}
+  packout:        {glob: "soony/erp/packout_log.csv"}
+  suppliers:      {glob: "suppliers/*/profile.*", key: supplier_id}
+  supplier_parts: {glob: "suppliers/*/components.csv", supplier_from_path: true}
+  supplier_part_changes: {glob: "suppliers/*/components_delta.csv"}
+  news:           {glob: "soony/news/*.json"}
+
+# Column synonyms per canonical field (covers SAP legacy exports and drift).
+column_synonyms:
+  po_number:  [po_number, EBELN, po, order]
+  po_line:    [po_line, EBELP]
+  plant:      [plant, WERKS]
+  supplier_id: [supplier_id, LIFNR, vendor, supplier_supplier_id]
+  qualification_status: [qualification_status, supplier_qualification_status]
+  qualification_valid_until: [supplier_qualification_valid_until]
+  supplier_status: [status_supplier, supplier_status]
+  notes: [notes, supplier_notes]
+  part_id:    [material_id, MATNR, component_id, child_id, part, Material]
+  quantity:   [quantity, MENGE, qty, Qty]
+  site:       [site, Site]
+  last_count: [last_count, Last count]
+  receipts_today: [Receipts today]
+  used_today: [Used today]
+  packed_today: [Packed today]
+  unit_price: [unit_price, NETPR, price]
+  order_date: [order_date, BEDAT]
+  requested_date: [requested_date, EINDT]
+  promised_date: [promised_date, ZZCONF]
+  delivered_date: [actual_delivery_date, WEDAT]
+  status:     [status, ZZSTAT]
+  buyer:      [buyer, ERNAM]
+
+# Documents read by the Document Reader agent (any language, any format).
+documents:
+  - "suppliers/*/order_confirmations/*"
+  - "suppliers/*/notices/*.pdf"
+  - "suppliers/*/contracts/*"
+  - "soony/receiving/**/*"
+  - "soony/context/*.pdf"
+  - "soony/context/*.docx"
+  - "soony/context/*.md"
+
+policies:
+  approval: soony/context/approval_policy_PP-07.pdf
+  org_chart: soony/context/org_chart_v2.pdf
+
+# Money: assumptions used to rank options. Shown as "configured" in the UI; confirm with Head of Procurement.
+fx_to_eur: {EUR: 1.0, USD: 0.92, CNY: 0.127, INR: 0.0108}
+value_at_risk_eur:        # what one missing unit costs on launch day
+  FG-GH6-CE: 149          # refunded pre-order + lost customer (CPO memo)
+  FG-GH6-STD: 12          # sold a few days later; margin delay + retailer friction
+costs:
+  local_pickup_eur: 1200
+  sort_per_unit_eur: 0.15
+receiving_buffer_hours: 2
+
+comms:
+  sender_name: "Lumi · Procurement Agent"
+  reply_timeout_hours: 4
+  demo_reply_timeout_minutes: 20
+  negotiation_tolerance: 0.10   # agent may agree up to +10% on the approved cost (never above the approver limit)
+
+autonomy:
+  earned_after_approvals: 3
+
+playbooks_enabled: all
+
+# Internal people → where their notifications go. Demo: plus-addressing on the team inbox,
+# so every notification lands in one inbox we control. A real customer uses work addresses.
+people:
+  Paul Winter: lumi.soony.agents+paul@gmail.com
+  Katrin Jansen: lumi.soony.agents+katrin@gmail.com
+  Raj Patel: lumi.soony.agents+raj@gmail.com
+  Dr. Maren Vogt: lumi.soony.agents+maren@gmail.com
+  Daniel Okafor: lumi.soony.agents+daniel@gmail.com
+  Felix Brunner: lumi.soony.agents+felix@gmail.com
+  Mei Lin: lumi.soony.agents+mei@gmail.com
+  Jonas Lindqvist: lumi.soony.agents+jonas@gmail.com
+notifications:
+  app_url: http://localhost:3000      # links in emails open the case here
+  review_to_role: Head of Procurement # new kinds of problems that hit the deadline

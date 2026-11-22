@@ -1,21 +1,10 @@
-# Dependencies
-node_modules/
-.venv/
-venv/
-__pycache__/
-
-# Env / secrets
-.env
-.env.*
-!.env.example
-
-# Build output
-dist/
-build/
-.next/
-
-# OS / editor
+**/__pycache__/
 .DS_Store
-.idea/
-.vscode/
-*.log
+.env
+.railway/
+.venv/
+Screenshot*.png
+data/
+frontend/.next/
+frontend/.vercel/
+frontend/node_modules/
